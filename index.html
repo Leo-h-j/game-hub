@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>方块躲避大作战 | Game-Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            color: #fff;
+        }
+        #gameBox {
+            border: 3px solid #4cc9f0;
+            background: #0f3460;
+        }
+        .info {
+            width: 600px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        #restartBtn {
+            margin-top: 15px;
+            padding: 10px 30px;
+            font-size: 18px;
+            background: #4361ee;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #restartBtn:hover {
+            background: #3a0ca3;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <div>得分：<span id="score">0</span></div>
+        <div>最高纪录：<span id="maxScore">0</span></div>
+    </div>
+    <canvas id="gameBox" width="600" height="500"></canvas>
+    <button id="restartBtn">重新开始游戏</button>
+
+    <script>
+        const canvas = document.getElementById("gameBox");
+        const ctx = canvas.getContext("2d");
+        const scoreText = document.getElementById("score");
+        const maxScoreText = document.getElementById("maxScore");
+        const restartBtn = document.getElementById("restartBtn");
+
+        // 玩家配置
+        const player = {
+            x: canvas.width / 2 - 20,
+            y: canvas.height - 60,
+            w: 40,
+            h: 40,
+            speed: 8,
+            color: "#4cc9f0"
+        };
+
+        let enemyList = [];
+        let keyMap = {};
+        let score = 0;
+        let maxScore = localStorage.getItem("gameMax") || 0;
+        let gameOver = false;
+        maxScoreText.innerText = maxScore;
+
+        // 键盘监听
+        document.addEventListener("keydown", e => keyMap[e.key] = true);
+        document.addEventListener("keyup", e => keyMap[e.key] = false);
+
+        // 生成敌人方块
+        function createEnemy() {
+            return {
+                x: Math.random() * (canvas.width - 30),
+                y: -30,
+                w: 30,
+                h: 30,
+                speed: 3 + Math.random() * 4,
+                color: "#f72585"
+            };
+        }
+
+        // 碰撞检测
+        function isHit(a, b) {
+            return a.x < b.x + b.w &&
+                   a.x + a.w > b.x &&
+                   a.y < b.y + b.h &&
+                   a.y + a.h > b.y;
+        }
+
+        // 游戏循环
+        function gameLoop() {
+            if (gameOver) return;
+            // 清画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 玩家移动
+            if (keyMap["ArrowLeft"] && player.x > 0) player.x -= player.speed;
+            if (keyMap["ArrowRight"] && player.x + player.w < canvas.width) player.x += player.speed;
+            if (keyMap["ArrowUp"] && player.y > 0) player.y -= player.speed;
+            if (keyMap["ArrowDown"] && player.y + player.h < canvas.height) player.y += player.speed;
+
+            // 随机生成敌人
+            if (Math.random() < 0.02) enemyList.push(createEnemy());
+
+            // 更新敌人
+            for (let i = enemyList.length - 1; i >= 0; i--) {
+                const e = enemyList[i];
+                e.y += e.speed;
+                // 敌人出屏幕加分并删除
+                if (e.y > canvas.height) {
+                    enemyList.splice(i, 1);
+                    score += 10;
+                    scoreText.innerText = score;
+                    continue;
+                }
+                // 碰撞判定（游戏结束）
+                if (isHit(player, e)) {
+                    gameOver = true;
+                    alert("游戏结束！本次得分：" + score);
+                    if (score > maxScore) {
+                        maxScore = score;
+                        localStorage.setItem("gameMax", maxScore);
+                        maxScoreText.innerText = maxScore;
+                    }
+                }
+            }
+
+            // 绘制玩家
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+            // 绘制敌人
+            enemyList.forEach(e => {
+                ctx.fillStyle = e.color;
+                ctx.fillRect(e.x, e.y, e.w, e.h);
+            });
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 重启游戏
+        function resetGame() {
+            player.x = canvas.width / 2 - 20;
+            player.y = canvas.height - 60;
+            enemyList = [];
+            score = 0;
+            gameOver = false;
+            scoreText.innerText = 0;
+            gameLoop();
+        }
+        restartBtn.addEventListener("click", resetGame);
+
+        // 启动游戏
+        gameLoop();
+    </script>
+</body>
+</html>
