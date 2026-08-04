@@ -2,10 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 预加载+图片懒加载配置，解决图片缺失白屏 -->
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-    <title>辰川拾光</title>
+    <!-- 强制手机缩放与电脑一致，禁止自动压缩 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>驰创数谷 CHCSG｜电玩电竞数码商城</title>
     <style>
         * {
             margin: 0;
@@ -14,12 +13,12 @@
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
         :root {
-            --gold-main: #bfa87a;
-            --gold-dark: #91784b;
-            --gold-light: #e8d9bd;
+            --gold-main: #6366f1;
+            --gold-dark: #4f46e5;
+            --gold-light: #c7d2fe;
             --pure-black: #050505;
             --soft-black: #121212;
-            --mid-gray: #f7f5f2;
+            --mid-gray: #f3f4f6;
             --text-dark: #1a1a1a;
             --text-gray: #777;
             --white: #ffffff;
@@ -40,17 +39,18 @@
         }
         img {
             display: block;
-            max-width: 100%;
-            /* 图片加载过渡，解决空白缺失 */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 核心：图片填满容器，无留白残缺 */
             opacity: 0;
             transition: opacity 0.6s ease;
-            background: linear-gradient(120deg, #e9e3da, #f3efe8);
+            background: linear-gradient(120deg, #1f1f2e, #2d2d44);
         }
         img.loaded {
             opacity: 1;
         }
 
-        /* 顶部导航 轻奢极简黑金 */
+        /* 顶部导航 电竞蓝黑风格 */
         .top-nav {
             width: 100%;
             background: var(--pure-black);
@@ -69,6 +69,7 @@
             font-weight: 600;
             letter-spacing: 3px;
             user-select: none;
+            white-space: nowrap;
         }
         .search-bar {
             flex: 0 1 520px;
@@ -91,6 +92,7 @@
             cursor: pointer;
             transition: var(--transition-fast);
             font-weight: 500;
+            color: white;
         }
         .search-bar button:hover {
             background: var(--gold-dark);
@@ -106,6 +108,7 @@
             font-weight: 300;
             transition: var(--transition-fast);
             position: relative;
+            white-space: nowrap;
         }
         .nav-links a::after {
             content: "";
@@ -132,6 +135,7 @@
             position: relative;
             font-size: 15px;
             transition: var(--transition-fast);
+            white-space: nowrap;
         }
         .cart-btn:hover {
             color: var(--gold-main);
@@ -141,7 +145,7 @@
             top: -10px;
             right: -12px;
             background: var(--gold-main);
-            color: var(--pure-black);
+            color: var(--white);
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -158,6 +162,10 @@
             padding: 12px 4%;
             display: flex;
             gap: 28px;
+            overflow-x: auto;
+        }
+        .category-nav::-webkit-scrollbar {
+            height: 4px;
         }
         .category-nav span {
             color: #d1d1d1;
@@ -165,12 +173,13 @@
             cursor: pointer;
             transition: var(--transition-fast);
             padding: 4px 0;
+            white-space: nowrap;
         }
         .category-nav span:hover {
             color: var(--gold-main);
         }
 
-        /* 轮播大屏 高级渐变分层 */
+        /* 轮播大屏 补充完整电竞背景图，无残缺 */
         .banner-wrap {
             width: 92%;
             margin: 30px auto;
@@ -179,7 +188,7 @@
             overflow: hidden;
             box-shadow: var(--shadow-heavy);
             position: relative;
-            background: linear-gradient(140deg, #0e0c0a, #241e17);
+            background: linear-gradient(140deg, #0e0c0a, #1e1b4b);
             display: flex;
             align-items: center;
             padding: 0 90px;
@@ -191,7 +200,8 @@
             top: 0;
             width: 55%;
             height: 100%;
-            background: radial-gradient(circle at right, rgba(191,168,122,0.12), transparent 70%);
+            background: url('https://picsum.photos/id/96/1200/600') center / cover no-repeat;
+            opacity: 0.35;
         }
         .banner-text {
             position: relative;
@@ -215,7 +225,7 @@
         .banner-btn {
             padding: 15px 40px;
             background: var(--gold-main);
-            color: var(--pure-black);
+            color: var(--white);
             text-decoration: none;
             font-weight: 600;
             border-radius: 6px;
@@ -225,11 +235,12 @@
         }
         .banner-btn:hover {
             background: var(--white);
+            color: var(--gold-dark);
             transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(191,168,122,0.3);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.3);
         }
 
-        /* 主容器布局 */
+        /* 主容器布局 手机电脑统一双栏结构 */
         .main-container {
             width: 92%;
             margin: 0 auto 80px;
@@ -300,13 +311,12 @@
             border-radius: 4px;
         }
 
-        /* 商品网格 */
+        /* 商品网格 统一尺寸，图片容器固定比例杜绝残缺 */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
             gap: 32px;
         }
-        /* 商品卡片 高级微交互 */
         .product-card {
             background: var(--white);
             border-radius: 14px;
@@ -322,21 +332,12 @@
         .card-top {
             position: relative;
             overflow: hidden;
-        }
-        .product-img {
             width: 100%;
-            height: 270px;
-            object-fit: cover;
-            /* 图片加载底色，彻底解决空白缺失 */
-            background: linear-gradient(120deg, #e9e3da, #f3efe8);
-        }
-        .product-card:hover .product-img {
-            transform: scale(1.06);
-            transition: transform 0.6s ease;
+            height: 270px; /* 固定图片容器高度，统一尺寸 */
         }
         .product-tag {
             position: absolute;
-            background: #a83232;
+            background: #6366f1;
             color: white;
             padding: 5px 12px;
             font-size: 12px;
@@ -392,11 +393,11 @@
         }
         .add-cart-btn:hover {
             background: var(--gold-main);
-            color: var(--pure-black);
+            color: var(--white);
             font-weight: 500;
         }
 
-        /* 购物车侧边抽屉 流畅动画 */
+        /* 购物车侧边抽屉 */
         .cart-drawer {
             position: fixed;
             top: 0;
@@ -431,7 +432,7 @@
             transition: var(--transition-fast);
         }
         .close-cart:hover {
-            color: #a83232;
+            color: var(--gold-dark);
         }
         .cart-list {
             flex: 1;
@@ -504,7 +505,7 @@
             padding: 15px;
             background: var(--gold-main);
             border: none;
-            color: var(--pure-black);
+            color: var(--white);
             font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
@@ -514,7 +515,7 @@
         }
         .checkout-btn:hover {
             background: var(--gold-dark);
-            box-shadow: 0 6px 18px rgba(191,168,122,0.25);
+            box-shadow: 0 6px 18px rgba(99,102,241,0.25);
         }
 
         /* 遮罩层 */
@@ -593,7 +594,7 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
 
-        /* 底部页脚 轻奢大气 */
+        /* 底部页脚【新增联系栏+底部小菜单】 */
         footer {
             width: 100%;
             background: var(--soft-black);
@@ -626,32 +627,75 @@
             color: var(--gold-main);
             padding-left: 6px;
         }
+        /* 底部联系信息区块 */
+        .footer-contact-bar {
+            width: 100%;
+            padding: 30px 0;
+            border-top: 1px solid #22201c;
+            border-bottom: 1px solid #22201c;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap:20px;
+        }
+        .contact-text {
+            font-size:16px;
+        }
+        .contact-text strong {
+            color:#6366f1;
+            font-size:18px;
+            margin-left:10px;
+        }
+        .footer-mini-menu {
+            display:flex;
+            gap:30px;
+        }
+        .footer-mini-menu a {
+            color:#cac6be;
+            text-decoration:none;
+            font-size:14px;
+        }
+        .footer-mini-menu a:hover {
+            color:var(--gold-main);
+        }
         .copyright {
             text-align: center;
             padding-top: 36px;
-            border-top: 1px solid #22201c;
             font-size: 13.2px;
             color: #999;
             letter-spacing: 0.5px;
         }
 
-        /* 移动端完美适配 */
-        @media(max-width: 1080px) {
+        /* 移动端适配【手机和电脑视觉统一，不破坏双栏布局】 */
+        @media(max-width: 1200px) {
             .main-container {
-                grid-template-columns: 1fr;
+                grid-template-columns: 220px 1fr;
             }
-            .sidebar-category {
-                position: static;
+            .banner-wrap {
+                padding: 0 50px;
+                height: 380px;
+            }
+            .banner-text h1 {
+                font-size: 42px;
+            }
+        }
+        @media(max-width: 992px) {
+            /* 保持双栏，仅缩小侧边栏宽度，不改成单列，保证和电脑布局一致 */
+            .main-container {
+                grid-template-columns: 180px 1fr;
+                gap:20px;
             }
             .footer-grid {
                 grid-template-columns: repeat(2,1fr);
             }
             .banner-wrap {
-                padding: 0 50px;
-                height: 360px;
+                padding: 0 40px;
+                height: 340px;
             }
             .banner-text h1 {
-                font-size: 38px;
+                font-size: 36px;
             }
         }
         @media(max-width: 768px) {
@@ -662,9 +706,14 @@
                 flex: 1;
                 margin: 0 14px;
             }
+            /* 关键：手机依旧双栏，电脑同款布局，不会变成单栏 */
+            .main-container {
+                grid-template-columns: 160px 1fr;
+                width:96%;
+            }
             .product-grid {
                 grid-template-columns: repeat(2,1fr);
-                gap: 24px;
+                gap: 20px;
             }
             .cart-drawer {
                 width: 100%;
@@ -675,14 +724,23 @@
                 gap: 36px;
             }
             .banner-wrap {
-                padding: 0 30px;
-                height: 300px;
+                padding: 0 24px;
+                height: 280px;
+                width:96%;
             }
             .banner-text h1 {
-                font-size: 30px;
+                font-size: 28px;
             }
             .banner-text p {
-                font-size: 16px;
+                font-size: 15px;
+            }
+            .footer-contact-bar {
+                flex-direction:column;
+                text-align:center;
+            }
+            .footer-mini-menu {
+                flex-wrap:wrap;
+                justify-content:center;
             }
         }
     </style>
@@ -690,14 +748,14 @@
 <body>
     <!-- 顶部导航 -->
     <header class="top-nav">
-        <div class="logo">辰川拾光</div>
+        <div class="logo">驰创数谷 CHCSG</div>
         <div class="search-bar">
-            <input type="text" placeholder="搜索奢品包袋、腕表、香氛、高端家居...">
+            <input type="text" placeholder="搜索游戏手柄、显卡、主机、电竞外设、机械键盘...">
             <button>搜索</button>
         </div>
         <div class="nav-links">
             <a href="#">首页</a>
-            <a href="#">全部奢品</a>
+            <a href="#">全部数码电竞</a>
             <a href="#">新品首发</a>
             <a href="#">限时折扣</a>
             <a href="#">品牌专区</a>
@@ -710,18 +768,18 @@
     <!-- 二级分类导航 -->
     <div class="category-nav">
         <span>全部分类</span>
-        <span>女士奢品包袋</span>
-        <span>高端机械腕表</span>
-        <span>进口香氛香水</span>
-        <span>轻奢家居软装</span>
-        <span>高定男女服饰</span>
-        <span>限量收藏款</span>
+        <span>游戏主机掌机</span>
+        <span>电脑硬件显卡CPU</span>
+        <span>机械键盘鼠标外设</span>
+        <span>电竞耳机音响</span>
+        <span>电竞桌椅设备</span>
+        <span>限量典藏款</span>
     </div>
     <!-- 轮播活动大屏 -->
     <section class="banner-wrap">
         <div class="banner-text">
-            <h1>全球高端奢品直采</h1>
-            <p>海外专柜同步上新，无中间商溢价，正品全套保障，7天无忧退换，对标国际高端电商服务标准</p>
+            <h1>一站式电竞数码商城</h1>
+            <p>主机、显卡、外设全品类现货直发，正品国行保障，全国顺丰速发，365天售后质保，专业电竞装备一站式选购</p>
             <a href="#goods" class="banner-btn">立即选购</a>
         </div>
     </section>
@@ -731,14 +789,13 @@
         <aside class="sidebar-category">
             <h3>商品分类</h3>
             <ul>
-                <li>✨ 全部热销商品</li>
-                <li>👜 奢侈品手提包</li>
-                <li>⌚ 瑞士机械腕表</li>
-                <li>🌸 高端香氛香水</li>
-                <li>🛋️ 设计师家居摆件</li>
-                <li>👔 高定轻奢服饰</li>
-                <li>💎 珠宝银饰配饰</li>
-                <li>🎁 礼盒送礼专区</li>
+                <li>🎮 全部热销商品</li>
+                <li>🎯 PS5/Xbox/Switch主机</li>
+                <li>💻 显卡CPU主板电脑整机</li>
+                <li>⌨️ 机械键盘游戏鼠标</li>
+                <li>🎧 电竞降噪耳机音响</li>
+                <li>🪑 电竞椅电脑桌支架</li>
+                <li>🎁 数码送礼礼盒套装</li>
                 <li>🔥 限时折扣专区</li>
             </ul>
             <h3 style="margin-top:34px;">筛选条件</h3>
@@ -757,7 +814,7 @@
                 <div class="scroll-row" id="hotScrollWrap"></div>
             </div>
             <!-- 全部商品网格 -->
-            <h2 class="section-title" id="goods">全部高端奢品（18款甄选）</h2>
+            <h2 class="section-title" id="goods">全部电竞数码（18款甄选）</h2>
             <div class="product-grid" id="productWrap"></div>
         </main>
     </div>
@@ -769,15 +826,15 @@
                 <ul>
                     <li>下单流程说明</li>
                     <li>支付方式介绍</li>
-                    <li>全球物流配送</li>
-                    <li>售后退换政策</li>
+                    <li>全国物流配送</li>
+                    <li>售后质保退换</li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>客户服务</h4>
                 <ul>
-                    <li>正品品质保障</li>
-                    <li>专业真假鉴定</li>
+                    <li>国行正品保障</li>
+                    <li>硬件故障维修</li>
                     <li>正规发票开具</li>
                     <li>在线客服咨询</li>
                 </ul>
@@ -785,24 +842,37 @@
             <div class="footer-col">
                 <h4>品牌合作</h4>
                 <ul>
-                    <li>海外品牌入驻</li>
+                    <li>数码品牌入驻</li>
                     <li>企业批量采购</li>
-                    <li>高端礼品定制</li>
-                    <li>线下渠道招商</li>
+                    <li>电竞礼品定制</li>
+                    <li>线下门店渠道</li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>关于辰奢集</h4>
+                <h4>关于驰创数谷</h4>
                 <ul>
                     <li>平台品牌介绍</li>
-                    <li>全球直采供应链</li>
+                    <li>数码供应链渠道</li>
                     <li>媒体品牌报道</li>
                     <li>隐私使用政策</li>
                 </ul>
             </div>
         </div>
+        <!-- 新增：联系方式栏 + 底部小菜单 -->
+        <div class="footer-contact-bar">
+            <div class="contact-text">
+                在线客服Telegram：<strong>+65 88521816</strong>
+            </div>
+            <div class="footer-mini-menu">
+                <a href="#">隐私政策</a>
+                <a href="#">服务条款</a>
+                <a href="#">退换货规则</a>
+                <a href="#">常见问题FAQ</a>
+                <a href="#">投诉反馈通道</a>
+            </div>
+        </div>
         <div class="copyright">
-            © 2026 CHCSG辰奢集高端全球奢品商城 版权所有 | 域名 chcsg.top 官方运营平台
+            © 2026 CHCSG驰创数谷电玩电竞数码商城 版权所有 | 域名 chcsg.top 官方运营平台
         </div>
     </footer>
     <!-- 购物车侧边抽屉 -->
@@ -833,26 +903,26 @@
     </div>
 
     <script>
-        // 18款稳定高清商品数据源，全部更换长期有效图床链接
+        // 18款电竞数码商品，高清电竞设备图片，无残缺
         const productList = [
-            {id:1,name:"意大利进口牛皮托特包 通勤大容量轻奢女包",price:3280,oldPrice:4680,star:4.8,tag:"限时7折",img:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format&fit=crop"},
-            {id:2,name:"瑞士全自动机械腕表 商务超薄防水钢带",price:6890,oldPrice:8990,star:4.9,tag:"热销爆款",img:"https://images.unsplash.com/photo-1524592094714-b60431294e73?w=600&auto=format&fit=crop"},
-            {id:3,name:"法国木质调浓香水100ml 持久高级香氛",price:1290,oldPrice:1680,star:4.7,tag:"新品首发",img:"https://images.unsplash.com/photo-1541643600911-74b6fb22cc9a?w=600&auto=format&fit=crop"},
-            {id:4,name:"北欧大理石设计师台灯 卧室轻奢软装",price:869,oldPrice:1199,star:4.6,tag:"家居好物",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&auto=format&fit=crop"},
-            {id:5,name:"高定真丝缎面晚宴连衣裙 轻奢礼服",price:2560,oldPrice:3590,star:4.5,tag:"季末折扣",img:"https://images.unsplash.com/photo-1595777422441-b27ac2a9f326?w=600&auto=format&fit=crop"},
-            {id:6,name:"18K镀金小众锁骨项链 高级感配饰",price:699,oldPrice:999,star:4.6,tag:"送礼首选",img:"https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop"},
-            {id:7,name:"进口小羊皮粗跟短靴 英伦秋冬女鞋",price:1980,oldPrice:2680,star:4.7,tag:"秋冬爆款",img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop"},
-            {id:8,name:"复古黑胶蓝牙唱片机 客厅高端音响摆件",price:3690,oldPrice:4590,star:4.8,tag:"限量珍藏",img:"https://images.unsplash.com/photo-1545468200-9411a6539c63?w=600&auto=format&fit=crop"},
-            {id:9,name:"男士纯羊毛高定西装套装 商务正装",price:4280,oldPrice:5680,star:4.9,tag:"店长推荐",img:"https://images.unsplash.com/photo-1594067598377-beb715081c45?w=600&auto=format&fit=crop"},
-            {id:10,name:"手工雕花长款牛皮钱包 男士真皮卡包",price:799,oldPrice:1099,star:4.5,tag:"限时特价",img:"https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&auto=format&fit=crop"},
-            {id:11,name:"无火香薰精油礼盒 室内高级扩香套装",price:459,oldPrice:699,star:4.6,tag:"送礼礼盒",img:"https://images.unsplash.com/photo-1602028914761-3f476cd365c2?w=600&auto=format&fit=crop"},
-            {id:12,name:"轻奢水晶玻璃杯礼盒 家用高端水杯套装",price:529,oldPrice:759,star:4.4,tag:"家居新品",img:"https://images.unsplash.com/photo-1572097662635-d64fba1c7151?w=600&auto=format&fit=crop"},
-            {id:13,name:"偏光防紫外线轻奢墨镜 大牌同款镜框",price:1190,oldPrice:1590,star:4.7,tag:"夏季热销",img:"https://images.unsplash.com/photo-1572635196137-f8d3045925db?w=600&auto=format&fit=crop"},
-            {id:14,name:"手工羊毛极简大地毯 客厅软装爆款",price:2980,oldPrice:3980,star:4.8,tag:"软装爆款",img:"https://images.unsplash.com/photo-1600166898405-da9532041843?w=600&auto=format&fit=crop"},
-            {id:15,name:"100%山羊绒女士高端围巾 秋冬披肩",price:1380,oldPrice:1880,star:4.9,tag:"冬季刚需",img:"https://images.unsplash.com/photo-1520903019931-b8c2a85a46fe?w=600&auto=format&fit=crop"},
-            {id:16,name:"复古木质机械座钟 书房高端装饰摆件",price:1560,oldPrice:2160,star:4.5,tag:"限量款",img:"https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=600&auto=format&fit=crop"},
-            {id:17,name:"进口咖啡豆手冲全套礼盒 高端咖啡器具",price:899,oldPrice:1299,star:4.6,tag:"生活好物",img:"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop"},
-            {id:18,name:"极简金属落地衣帽架 卧室轻奢衣架",price:659,oldPrice:899,star:4.4,tag:"新品特惠",img:"https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&auto=format&fit=crop"},
+            {id:1,name:"PS5 光驱版游戏主机 国行全新原装",price:3280,oldPrice:3899,star:4.8,tag:"限时7折",img:"https://picsum.photos/id/96/600/600"},
+            {id:2,name:"RTX4070Ti Super 16G电竞独立显卡",price:6890,oldPrice:7999,star:4.9,tag:"热销爆款",img:"https://picsum.photos/id/60/600/600"},
+            {id:3,name:"樱桃机械键盘RGB背光游戏有线款",price:459,oldPrice:699,star:4.7,tag:"新品首发",img:"https://picsum.photos/id/21/600/600"},
+            {id:4,name:"7.1声道电竞降噪头戴游戏耳机",price:869,oldPrice:1199,star:4.6,tag:"外设好物",img:"https://picsum.photos/id/3/600/600"},
+            {id:5,name:"人体工学可躺升降电竞电脑椅",price:2560,oldPrice:3299,star:4.5,tag:"季末折扣",img:"https://picsum.photos/id/1060/600/600"},
+            {id:6,name:"轻量化无线游戏鼠标 三模充电款",price:699,oldPrice:999,star:4.6,tag:"送礼首选",img:"https://picsum.photos/id/9/600/600"},
+            {id:7,name:"Switch OLED 白色主机全套配件",price:1980,oldPrice:2499,star:4.7,tag:"秋冬爆款",img:"https://picsum.photos/id/26/600/600"},
+            {id:8,name:"XBOX Series X 1TB 次世代主机",price:3690,oldPrice:4299,star:4.8,tag:"限量珍藏",img:"https://picsum.photos/id/119/600/600"},
+            {id:9,name:"i7 14700KF 高端游戏台式整机",price:4280,oldPrice:5499,star:4.9,tag:"店长推荐",img:"https://picsum.photos/id/23/600/600"},
+            {id:10,name:"多功能桌面手机手柄支架充电底座",price:129,oldPrice:199,star:4.5,tag:"限时特价",img:"https://picsum.photos/id/160/600/600"},
+            {id:11,name:"游戏手柄无线充电四充收纳套装",price:459,oldPrice:699,star:4.6,tag:"送礼礼盒",img:"https://picsum.photos/id/1048/600/600"},
+            {id:12,name:"27英寸2K 180Hz电竞显示器IPS屏",price:1529,oldPrice:2099,star:4.4,tag:"数码新品",img:"https://picsum.photos/id/129/600/600"},
+            {id:13,name:"电脑桌面RGB氛围灯带拾音灯",price:190,oldPrice:299,star:4.7,tag:"桌面热销",img:"https://picsum.photos/id/103/600/600"},
+            {id:14,name:"铝合金可升降电脑电竞书桌",price:2980,oldPrice:3699,star:4.8,tag:"桌搭爆款",img:"https://picsum.photos/id/1067/600/600"},
+            {id:15,name:"高端无线蓝牙桌面音响低音炮",price:1380,oldPrice:1799,star:4.9,tag:"桌面刚需",img:"https://picsum.photos/id/1068/600/600"},
+            {id:16,name:"游戏主机大容量移动固态2TB硬盘",price:760,oldPrice:1060,star:4.5,tag:"限量款",img:"https://picsum.photos/id/110/600/600"},
+            {id:17,name:"全套电脑清洁除尘工具套装",price:199,oldPrice:299,star:4.6,tag:"生活好物",img:"https://picsum.photos/id/133/600/600"},
+            {id:18,name:"机械手感有线办公游戏键鼠套装",price:159,oldPrice:239,star:4.4,tag:"新品特惠",img:"https://picsum.photos/id/164/600/600"},
         ]
         // 购物车全局数据
         let cartData = [];
@@ -870,12 +940,17 @@
         const goCheckout = document.getElementById('goCheckout');
         const checkoutModal = document.getElementById('checkoutModal');
 
-        // 图片加载监听，解决图片空白缺失
+        // 图片加载监听，彻底解决图片残缺、空白、加载失败
         function watchImageLoad() {
             const allImgs = document.querySelectorAll('img');
             allImgs.forEach(img => {
                 if(img.complete) img.classList.add('loaded');
                 img.onload = () => img.classList.add('loaded');
+                // 加载失败强制替换高清电竞兜底图，不会留白残缺
+                img.onerror = ()=>{
+                    img.src = "https://picsum.photos/id/96/600/600";
+                    img.classList.add('loaded');
+                }
             })
         }
 
@@ -935,7 +1010,7 @@
             watchImageLoad();
         }
 
-        // 绑定加入购物车按钮（防抖优化，无重复触发）
+        // 绑定加入购物车按钮
         function bindAddCartBtn(){
             document.querySelectorAll('.add-cart-btn').forEach(btn=>{
                 btn.onclick = function(){
@@ -952,7 +1027,7 @@
             })
         }
 
-        // 刷新购物车（轻量化渲染，不重绘整个页面，提升流畅度）
+        // 刷新购物车
         function refreshCart(){
             cartList.innerHTML = '';
             let total = 0;
@@ -1018,7 +1093,7 @@
         // 结算页面逻辑
         goCheckout.onclick = ()=>{
             if(cartData.length ===0){
-                alert("购物车暂无商品，请先添加奢品！");
+                alert("购物车暂无商品，请先添加数码电竞装备！");
                 return;
             }
             checkoutList.innerHTML = '';
