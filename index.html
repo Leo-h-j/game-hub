@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 强制手机缩放与电脑一致，禁止自动压缩 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>驰创数谷 CHCSG｜电玩电竞数码商城</title>
     <style>
@@ -13,1111 +12,779 @@
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
         :root {
-            --gold-main: #6366f1;
-            --gold-dark: #4f46e5;
-            --gold-light: #c7d2fe;
-            --pure-black: #050505;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #c7d2fe;
+            --black: #050505;
             --soft-black: #121212;
-            --mid-gray: #f3f4f6;
-            --text-dark: #1a1a1a;
+            --gray-bg: #f3f4f6;
+            --text-main: #1a1a1a;
             --text-gray: #777;
             --white: #ffffff;
+            --border: #eee;
             --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
             --shadow-md: 0 6px 18px rgba(0,0,0,0.09);
-            --shadow-heavy: 0 12px 40px rgba(0,0,0,0.14);
-            --transition-fast: all 0.2s cubic-bezier(0.4,0,0.2,1);
-            --transition-normal: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.14);
+            --shadow-float: 0 8px 30px rgba(99,102,241,0.2);
+            --fast: all 0.2s cubic-bezier(0.4,0,0.2,1);
+            --normal: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
         }
         html {
             scroll-behavior: smooth;
         }
         body {
-            background-color: var(--mid-gray);
-            color: var(--text-dark);
-            line-height: 1.55;
+            background-color: var(--gray-bg);
+            color: var(--text-main);
+            line-height: 1.6;
             overflow-x: hidden;
         }
         img {
             display: block;
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* 核心：图片填满容器，无留白残缺 */
+            object-fit: cover;
             opacity: 0;
-            transition: opacity 0.6s ease;
-            background: linear-gradient(120deg, #1f1f2e, #2d2d44);
+            transition: opacity 0.5s ease;
+            background: #e5e7eb;
         }
-        img.loaded {
-            opacity: 1;
-        }
+        img.loaded {opacity:1;}
+        a {text-decoration: none;color: inherit;}
+        ul {list-style: none;}
+        button, input, select, textarea {font-family: inherit;outline: none;border:0;}
 
-        /* 顶部导航 电竞蓝黑风格 */
+        /* 页面路由容器 所有子页面容器切换 */
+        .page-container {display: none;width:100%;}
+        .page-container.active {display:block;}
+
+        /* 顶部导航 */
         .top-nav {
             width: 100%;
-            background: var(--pure-black);
+            background: var(--black);
             padding: 14px 4%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            top:0;
+            z-index:999;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            gap:20px;
         }
         .logo {
-            color: var(--gold-main);
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            user-select: none;
+            color: var(--primary);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
             white-space: nowrap;
+            cursor: pointer;
         }
         .search-bar {
-            flex: 0 1 520px;
+            flex: 0 1 550px;
             display: flex;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             overflow: hidden;
         }
         .search-bar input {
             width: 100%;
-            padding: 11px 18px;
-            border: none;
-            font-size: 14px;
-            outline: none;
-            background: #fcfbf8;
+            padding: 12px 20px;
+            font-size:14px;
+            background: #fff;
         }
         .search-bar button {
-            background: var(--gold-main);
-            border: none;
-            padding: 0 22px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            font-weight: 500;
-            color: white;
+            padding:0 24px;
+            background: var(--primary);
+            color:#fff;
+            font-weight:500;
+            cursor:pointer;
+            transition:var(--fast);
         }
-        .search-bar button:hover {
-            background: var(--gold-dark);
-        }
-        .nav-links {
-            display: flex;
-            gap: 36px;
-        }
+        .search-bar button:hover {background:var(--primary-dark);}
+        .nav-group {display:flex;align-items:center;gap:32px;white-space:nowrap;}
+        .nav-links {display:flex;gap:30px;}
         .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 300;
-            transition: var(--transition-fast);
-            position: relative;
-            white-space: nowrap;
+            color:#ddd;
+            font-size:15px;
+            position:relative;
+            transition:var(--fast);
         }
         .nav-links a::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -4px;
-            left: 0;
-            background: var(--gold-main);
-            transition: var(--transition-fast);
+            content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:var(--primary);transition:var(--fast);
         }
-        .nav-links a:hover {
-            color: var(--gold-main);
+        .nav-links a:hover {color:var(--primary);}
+        .nav-links a:hover::after {width:100%;}
+        .cart-header-btn {
+            color:#fff;
+            cursor:pointer;
+            position:relative;
+            font-size:15px;
+            display:flex;align-items:center;gap:8px;
+            transition:var(--fast);
         }
-        .nav-links a:hover::after {
-            width: 100%;
+        .cart-header-btn:hover {color:var(--primary);}
+        .cart-badge {
+            position:absolute;top:-10px;right:-12px;
+            width:20px;height:20px;background:var(--primary);
+            color:#fff;border-radius:50%;text-align:center;
+            font-size:12px;line-height:20px;font-weight:bold;
         }
-        .cart-btn {
-            color: var(--white);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            font-size: 15px;
-            transition: var(--transition-fast);
-            white-space: nowrap;
-        }
-        .cart-btn:hover {
-            color: var(--gold-main);
-        }
-        .cart-count {
-            position: absolute;
-            top: -10px;
-            right: -12px;
-            background: var(--gold-main);
-            color: var(--white);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 20px;
-        }
+        .mobile-menu-btn {display:none;color:#fff;font-size:24px;cursor:pointer;}
 
         /* 二级分类导航 */
-        .category-nav {
-            width: 100%;
-            background: var(--soft-black);
-            padding: 12px 4%;
-            display: flex;
-            gap: 28px;
-            overflow-x: auto;
+        .category-sub-nav {
+            width:100%;background:var(--soft-black);
+            padding:12px 4%;display:flex;gap:32px;
+            overflow-x:auto;
         }
-        .category-nav::-webkit-scrollbar {
-            height: 4px;
+        .category-sub-nav::-webkit-scrollbar {height:4px;}
+        .category-sub-nav span {
+            color:#ccc;font-size:14px;cursor:pointer;
+            white-space:nowrap;transition:var(--fast);
         }
-        .category-nav span {
-            color: #d1d1d1;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            padding: 4px 0;
-            white-space: nowrap;
-        }
-        .category-nav span:hover {
-            color: var(--gold-main);
-        }
+        .category-sub-nav span:hover {color:var(--primary);}
 
-        /* 轮播大屏 补充完整电竞背景图，无残缺 */
-        .banner-wrap {
-            width: 92%;
-            margin: 30px auto;
-            height: 440px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow-heavy);
-            position: relative;
-            background: linear-gradient(140deg, #0e0c0a, #1e1b4b);
-            display: flex;
-            align-items: center;
-            padding: 0 90px;
+        /* 首页轮播横幅 */
+        .banner {
+            width:92%;margin:30px auto;height:440px;
+            border-radius:var(--radius-lg);overflow:hidden;
+            box-shadow:var(--shadow-lg);position:relative;
+            background: linear-gradient(135deg,#0b0a18,#201b50);
+            display:flex;align-items:center;padding:0 80px;
         }
-        .banner-wrap::before {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 55%;
-            height: 100%;
-            background: url('https://picsum.photos/id/96/1200/600') center / cover no-repeat;
-            opacity: 0.35;
+        .banner-bg {
+            position:absolute;right:0;top:0;width:58%;height:100%;
+            background:url('https://picsum.photos/id/96/1400/700') center/cover no-repeat;
+            opacity:0.3;
         }
-        .banner-text {
-            position: relative;
-            z-index: 2;
-        }
-        .banner-text h1 {
-            color: var(--white);
-            font-size: 52px;
-            margin-bottom: 18px;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-        .banner-text p {
-            color: #cac6be;
-            font-size: 19px;
-            margin-bottom: 36px;
-            max-width: 640px;
-            font-weight: 300;
-            line-height: 1.7;
-        }
+        .banner-text {z-index:2;position:relative;max-width:650px;}
+        .banner-text h1 {color:#fff;font-size:50px;margin-bottom:16px;font-weight:600;}
+        .banner-text p {color:#d1d5db;font-size:18px;margin-bottom:32px;line-height:1.7;}
         .banner-btn {
-            padding: 15px 40px;
-            background: var(--gold-main);
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 6px;
-            transition: var(--transition-normal);
-            display: inline-block;
-            letter-spacing: 1px;
+            padding:14px 38px;background:var(--primary);color:#fff;
+            border-radius:var(--radius-sm);font-weight:600;
+            display:inline-block;transition:var(--normal);
         }
         .banner-btn:hover {
-            background: var(--white);
-            color: var(--gold-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(99,102,241,0.3);
+            background:#fff;color:var(--primary-dark);
+            transform:translateY(-4px);box-shadow:var(--shadow-float);
         }
 
-        /* 主容器布局 手机电脑统一双栏结构 */
-        .main-container {
-            width: 92%;
-            margin: 0 auto 80px;
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 36px;
+        /* 首页主布局 侧边栏+商品区 */
+        .main-wrap {width:92%;margin:0 auto 80px;display:grid;grid-template-columns:240px 1fr;gap:36px;}
+        .side-category {
+            background:#fff;padding:28px;border-radius:var(--radius-md);
+            box-shadow:var(--shadow-sm);height:fit-content;
+            position:sticky;top:106px;
         }
-        /* 左侧分类栏 */
-        .sidebar-category {
-            background: var(--white);
-            padding: 28px;
-            border-radius: 14px;
-            box-shadow: var(--shadow-sm);
-            height: fit-content;
-            position: sticky;
-            top: 104px;
-        }
-        .sidebar-category h3 {
-            font-size: 19px;
-            margin-bottom: 22px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #eeebe6;
-            color: var(--soft-black);
-        }
-        .sidebar-category ul {
-            list-style: none;
-        }
-        .sidebar-category li {
-            padding: 11px 0;
-            cursor: pointer;
-            color: var(--text-gray);
-            transition: var(--transition-fast);
-            font-size: 14.5px;
-        }
-        .sidebar-category li:hover {
-            color: var(--gold-dark);
-            padding-left: 8px;
-        }
-
-        /* 热销横向滚动区 */
-        .hot-scroll {
-            margin-bottom: 48px;
-        }
+        .side-category h3 {font-size:19px;padding-bottom:14px;margin-bottom:20px;border-bottom:1px solid var(--border);}
+        .side-category li {padding:10px 0;color:var(--text-gray);cursor:pointer;transition:var(--fast);font-size:14.5px;}
+        .side-category li:hover {color:var(--primary-dark);padding-left:8px;}
         .section-title {
-            font-size: 24px;
-            margin-bottom: 24px;
-            padding-left: 14px;
-            border-left: 6px solid var(--gold-main);
-            font-weight: 500;
+            font-size:24px;margin-bottom:24px;padding-left:12px;
+            border-left:6px solid var(--primary);font-weight:500;
         }
-        .scroll-row {
-            display: flex;
-            gap: 24px;
-            overflow-x: auto;
-            padding-bottom: 16px;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: thin;
-        }
-        .scroll-row::-webkit-scrollbar {
-            height: 7px;
-        }
-        .scroll-row::-webkit-scrollbar-thumb {
-            background: var(--gold-main);
-            border-radius: 4px;
-        }
-        .scroll-row::-webkit-scrollbar-track {
-            background: #e9e3da;
-            border-radius: 4px;
-        }
-
-        /* 商品网格 统一尺寸，图片容器固定比例杜绝残缺 */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
-            gap: 32px;
-        }
+        /* 热销横向滚动 */
+        .hot-row {display:flex;gap:24px;overflow-x:auto;padding-bottom:16px;scroll-snap-type:x mandatory;}
+        .hot-row::-webkit-scrollbar {height:7px;}
+        .hot-row::-webkit-scrollbar-thumb {background:var(--primary);border-radius:4px;}
+        /* 商品网格 */
+        .product-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:30px;}
         .product-card {
-            background: var(--white);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-normal);
-            scroll-snap-align: start;
+            background:#fff;border-radius:var(--radius-md);overflow:hidden;
+            box-shadow:var(--shadow-sm);transition:var(--normal);cursor:pointer;
+            scroll-snap-align:start;
         }
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-heavy);
+        .product-card:hover {transform:translateY(-10px);box-shadow:var(--shadow-lg);}
+        .card-img-box {width:100%;height:260px;position:relative;overflow:hidden;}
+        .card-tag {
+            position:absolute;top:12px;left:12px;background:var(--primary);
+            color:#fff;padding:4px 10px;font-size:12px;border-radius:4px;z-index:2;
         }
-        .card-top {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 270px; /* 固定图片容器高度，统一尺寸 */
+        .card-img-box img {transition:transform 0.4s ease;}
+        .product-card:hover .card-img-box img {transform:scale(1.06);}
+        .card-info {padding:20px;}
+        .card-name {font-size:15px;font-weight:500;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .card-star {color:var(--primary);font-size:14px;margin-bottom:10px;letter-spacing:1px;}
+        .price-line {display:flex;gap:10px;align-items:center;margin-bottom:14px;}
+        .old-price {color:#aaa;text-decoration:line-through;font-size:13px;}
+        .new-price {font-size:20px;font-weight:700;}
+        .add-cart-card {
+            width:100%;padding:11px;background:var(--soft-black);color:#fff;
+            border-radius:var(--radius-sm);cursor:pointer;transition:var(--fast);font-size:14px;
         }
-        .product-tag {
-            position: absolute;
-            background: #6366f1;
-            color: white;
-            padding: 5px 12px;
-            font-size: 12px;
-            top: 12px;
-            left: 12px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-            z-index: 2;
+        .add-cart-card:hover {background:var(--primary);}
+
+        /* ========== 商品详情页样式（亚马逊同款） ========== */
+        .detail-wrap {width:92%;margin:40px auto;display:grid;grid-template-columns:520px 1fr;gap:40px;}
+        .detail-gallery {display:flex;flex-direction:column;gap:16px;}
+        .main-detail-img {
+            width:100%;height:480px;border-radius:var(--radius-md);overflow:hidden;
+            background:#fff;box-shadow:var(--shadow-sm);cursor:zoom-in;
         }
-        .product-info {
-            padding: 20px;
+        .thumb-list {display:flex;gap:12px;}
+        .thumb-item {
+            width:90px;height:90px;border-radius:6px;overflow:hidden;
+            border:2px solid transparent;cursor:pointer;transition:var(--fast);
         }
-        .product-name {
-            font-size: 15.2px;
-            font-weight: 500;
-            margin-bottom: 10px;
-            line-height: 1.45;
-            color: var(--soft-black);
+        .thumb-item.active {border-color:var(--primary);}
+        .detail-info h1 {font-size:28px;margin-bottom:12px;line-height:1.4;}
+        .detail-meta {display:flex;gap:20px;margin-bottom:16px;color:var(--text-gray);font-size:14px;}
+        .detail-star {color:var(--primary);font-size:16px;margin-bottom:20px;}
+        .detail-price-block {
+            padding:20px;background:#fff;border-radius:var(--radius-md);
+            box-shadow:var(--shadow-sm);margin-bottom:24px;
         }
-        .star-rating {
-            color: var(--gold-main);
-            margin-bottom: 12px;
-            font-size: 14px;
-            letter-spacing: 1px;
+        .price-big {font-size:36px;font-weight:bold;color:#d92525;margin-bottom:6px;}
+        .price-old {font-size:16px;color:#999;text-decoration:line-through;}
+        .stock-text {margin:12px 0;color:#22a75d;font-weight:500;}
+        /* 规格选择 */
+        .spec-title {font-size:16px;font-weight:600;margin:16px 0 10px;}
+        .spec-group {display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
+        .spec-item {
+            padding:10px 20px;border:1px solid #ddd;border-radius:var(--radius-sm);
+            cursor:pointer;transition:var(--fast);
         }
-        .price-wrap {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 16px;
+        .spec-item.active {border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark);}
+        .num-select {display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+        .num-btn {width:36px;height:36px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:18px;}
+        .num-input {width:60px;height:36px;text-align:center;border:1px solid #ddd;}
+        .detail-btn-group {display:flex;gap:16px;}
+        .buy-now {
+            flex:1;padding:14px 0;background:#d92525;color:#fff;
+            border-radius:var(--radius-sm);font-weight:600;font-size:16px;cursor:pointer;
+            transition:var(--fast);
         }
-        .old-price {
-            color: #aaa;
-            text-decoration: line-through;
-            font-size: 13px;
+        .buy-now:hover {background:#b41c1c;box-shadow:0 4px 16px rgba(217,37,37,0.25);}
+        .detail-addcart {
+            flex:1;padding:14px 0;background:var(--primary);color:#fff;
+            border-radius:var(--radius-sm);font-weight:600;font-size:16px;cursor:pointer;
+            transition:var(--fast);
         }
-        .new-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--pure-black);
+        .detail-addcart:hover {background:var(--primary-dark);}
+        /* 详情标签栏 介绍/参数/评价 */
+        .detail-tab-box {width:92%;margin:60px auto 100px;background:#fff;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);}
+        .tab-header {display:flex;border-bottom:1px solid var(--border);}
+        .tab-item {
+            padding:16px 32px;font-size:16px;cursor:pointer;
+            position:relative;color:var(--text-gray);transition:var(--fast);
         }
-        .add-cart-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--soft-black);
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            font-size: 14.5px;
-            letter-spacing: 0.5px;
+        .tab-item.active {color:var(--primary);font-weight:500;}
+        .tab-item.active::after {
+            content:"";position:absolute;bottom:-1px;left:0;width:100%;height:3px;background:var(--primary);
         }
-        .add-cart-btn:hover {
-            background: var(--gold-main);
-            color: var(--white);
-            font-weight: 500;
+        .tab-content {padding:36px;display:none;}
+        .tab-content.active {display:block;}
+        .desc-block h3 {margin-bottom:16px;font-size:20px;}
+        .desc-text {line-height:1.8;color:#333;margin-bottom:24px;}
+        .desc-img {width:100%;margin:12px 0;border-radius:var(--radius-sm);}
+        .param-table {width:100%;border-collapse:collapse;}
+        .param-table td {border:1px solid var(--border);padding:12px 16px;}
+        .param-table td:first-child {background:#f9fafb;width:220px;font-weight:500;}
+        .review-item {padding:20px 0;border-bottom:1px solid var(--border);}
+        .review-user {display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+        .review-star {color:var(--primary);}
+
+        /* ========== 结算支付页面 ========== */
+        .checkout-wrap {width:92%;margin:40px auto;display:grid;grid-template-columns:1fr 380px;gap:36px;}
+        .checkout-left {background:#fff;border-radius:var(--radius-md);padding:32px;box-shadow:var(--shadow-sm);}
+        .checkout-step {display:flex;gap:40px;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+        .step-item {text-align:center;color:#aaa;position:relative;flex:1;}
+        .step-item.active {color:var(--primary);font-weight:500;}
+        .step-item.active::after {content:"";position:absolute;bottom:-21px;left:0;width:100%;height:3px;background:var(--primary);}
+        .addr-block {margin-bottom:32px;}
+        .addr-title {font-size:18px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+        .new-addr-btn {color:var(--primary);cursor:pointer;font-size:14px;}
+        .addr-card {border:1px solid #ddd;padding:16px;border-radius:var(--radius-sm);margin-bottom:12px;cursor:pointer;}
+        .addr-card.active {border-color:var(--primary);background:var(--primary-light);}
+        .form-row {margin-bottom:20px;}
+        .form-row label {display:block;margin-bottom:8px;font-weight:500;}
+        .form-row input, .form-row select {
+            width:100%;padding:12px 16px;border:1px solid #ddd;border-radius:var(--radius-sm);font-size:14px;
+        }
+        .pay-method-group {display:flex;gap:16px;margin-top:12px;}
+        .pay-item {
+            flex:1;border:1px solid #ddd;padding:16px;text-align:center;border-radius:var(--radius-sm);cursor:pointer;
+        }
+        .pay-item.active {border-color:var(--primary);background:var(--primary-light);}
+        /* 结算右侧订单汇总 */
+        .checkout-right {position:sticky;top:106px;height:fit-content;}
+        .order-summary {background:#fff;border-radius:var(--radius-md);padding:28px;box-shadow:var(--shadow-sm);}
+        .order-item {display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+        .order-item-img {width:70px;height:70px;border-radius:6px;overflow:hidden;}
+        .order-item-name {font-size:14px;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .order-item-price {color:#d92525;font-weight:600;font-size:14px;}
+        .calc-row {display:flex;justify-content:space-between;padding:10px 0;font-size:15px;}
+        .calc-total {display:flex;justify-content:space-between;padding:16px 0;margin-top:12px;border-top:1px solid var(--border);font-size:20px;font-weight:bold;color:#d92525;}
+        .submit-pay {
+            width:100%;padding:15px 0;background:#d92525;color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:16px;margin-top:20px;cursor:pointer;transition:var(--fast);
+        }
+        .submit-pay:hover {background:#b41c1c;box-shadow:0 6px 20px rgba(217,37,37,0.22);}
+
+        /* ========== AI在线客服弹窗 ========== */
+        .service-float-btn {
+            position:fixed;right:30px;bottom:30px;width:60px;height:60px;
+            background:var(--primary);border-radius:50%;color:#fff;
+            font-size:26px;display:flex;align-items:center;justify-content:center;
+            cursor:pointer;box-shadow:var(--shadow-float);z-index:998;
+            transition:var(--normal);
+        }
+        .service-float-btn:hover {transform:scale(1.08);}
+        .service-modal {
+            position:fixed;right:30px;bottom:100px;width:380px;height:520px;
+            background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);
+            z-index:999;display:none;flex-direction:column;overflow:hidden;
+        }
+        .service-modal.active {display:flex;}
+        .service-header {
+            padding:16px 20px;background:var(--primary);color:#fff;
+            display:flex;justify-content:space-between;align-items:center;
+        }
+        .service-close {cursor:pointer;font-size:22px;}
+        .service-quick {display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+        .quick-qa {
+            padding:6px 10px;background:var(--primary-light);color:var(--primary-dark);
+            border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap;
+        }
+        .chat-box {flex:1;padding:16px;overflow-y:auto;background:#f9fafb;}
+        .chat-item {margin-bottom:16px;max-width:80%;}
+        .chat-robot {
+            background:#fff;padding:10px 14px;border-radius:12px 12px 12px 4px;box-shadow:var(--shadow-sm);
+        }
+        .chat-user {
+            margin-left:auto;background:var(--primary);color:#fff;padding:10px 14px;border-radius:12px 12px 4px 12px;
+        }
+        .service-input-bar {
+            display:flex;padding:12px;border-top:1px solid var(--border);gap:10px;
+        }
+        .service-input {flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:24px;font-size:14px;}
+        .send-msg {
+            width:70px;background:var(--primary);color:#fff;border-radius:24px;cursor:pointer;
         }
 
-        /* 购物车侧边抽屉 */
-        .cart-drawer {
-            position: fixed;
-            top: 0;
-            right: -440px;
-            width: 440px;
-            height: 100vh;
-            background: var(--white);
-            box-shadow: -6px 0 36px rgba(0,0,0,0.16);
-            transition: right 0.45s cubic-bezier(0.4,0,0.2,1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-        .cart-drawer.active {
-            right: 0;
-        }
-        .cart-header {
-            padding: 28px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #eeebe6;
-        }
-        .cart-header h2 {
-            font-size: 22px;
-            font-weight: 500;
-        }
-        .close-cart {
-            cursor: pointer;
-            font-size: 26px;
-            color: var(--text-gray);
-            transition: var(--transition-fast);
-        }
-        .close-cart:hover {
-            color: var(--gold-dark);
-        }
-        .cart-list {
-            flex: 1;
-            padding: 26px 30px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-        }
-        .cart-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .cart-list::-webkit-scrollbar-thumb {
-            background: var(--gold-light);
-            border-radius: 3px;
-        }
-        .cart-item {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #f0ede8;
-        }
-        .cart-item img {
-            width: 86px;
-            height: 86px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .item-info h4 {
-            font-size: 14.2px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .item-price {
-            color: var(--gold-dark);
-            font-weight: 600;
-            font-size: 14.5px;
-        }
-        .quantity-control {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            align-items: center;
-        }
-        .quantity-control button {
-            width: 26px;
-            height: 26px;
-            border: 1px solid #ddd;
-            background: transparent;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            font-size: 16px;
-        }
-        .quantity-control button:hover {
-            background: var(--gold-light);
-            border-color: var(--gold-main);
-        }
-        .cart-footer {
-            padding: 28px 30px;
-            border-top: 1px solid #eeebe6;
-        }
-        .total-line {
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        .checkout-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--gold-main);
-            border: none;
-            color: var(--white);
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: var(--transition-fast);
-            letter-spacing: 1px;
-        }
-        .checkout-btn:hover {
-            background: var(--gold-dark);
-            box-shadow: 0 6px 18px rgba(99,102,241,0.25);
-        }
-
-        /* 遮罩层 */
+        /* 购物车抽屉、遮罩、弹窗通用 */
         .mask {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
+            position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:997;
+            opacity:0;pointer-events:none;transition:opacity 0.3s ease;
         }
-        .mask.active {
-            opacity: 1;
-            pointer-events: all;
+        .mask.active {opacity:1;pointer-events:all;}
+        .cart-drawer {
+            position:fixed;top:0;right:-440px;width:440px;height:100vh;
+            background:#fff;box-shadow:-6px 30px 40px rgba(0,0,0,0.15);
+            transition:right 0.4s cubic-bezier(0.4,0,0.2,1);z-index:999;
+            display:flex;flex-direction:column;
         }
-
-        /* 结算弹窗 */
-        .checkout-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            width: 740px;
-            max-width: 94%;
-            background: var(--white);
-            border-radius: 18px;
-            padding: 40px;
-            z-index: 1001;
-            display: none;
-            box-shadow: 0 16px 60px rgba(0,0,0,0.22);
-            transition: transform 0.35s ease;
-        }
-        .checkout-modal.active {
-            display: block;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .checkout-modal h2 {
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #eeebe6;
-            font-size: 24px;
-            font-weight: 500;
-        }
-        .checkout-item-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0ede8;
-            font-size: 15px;
-        }
-        .checkout-total {
-            margin-top: 28px;
-            font-size: 22px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            padding-top: 16px;
-            border-top: 1px solid #eeebe6;
-        }
-        .submit-order {
-            width: 100%;
-            padding: 16px;
-            margin-top: 28px;
-            background: var(--soft-black);
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            letter-spacing: 1px;
-        }
-        .submit-order:hover {
-            background: var(--pure-black);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        .cart-drawer.active {right:0;}
+        .cart-draw-header {padding:26px 30px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+        .cart-draw-list {flex:1;padding:24px 30px;overflow-y:auto;}
+        .cart-item-row {display:flex;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+        .cart-item-img {width:86px;height:86px;border-radius:8px;overflow:hidden;}
+        .cart-item-name {font-size:14px;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .cart-item-price {color:var(--primary-dark);font-weight:600;}
+        .cart-num-ctrl {display:flex;gap:10px;align-items:center;margin-top:10px;}
+        .cart-num-ctrl button {width:28px;height:28px;border:1px solid #ddd;background:#fff;cursor:pointer;}
+        .cart-del {color:#d92525;font-size:13px;margin-top:8px;cursor:pointer;}
+        .cart-draw-footer {padding:26px 30px;border-top:1px solid var(--border);}
+        .cart-total-line {display:flex;justify-content:space-between;font-size:20px;font-weight:600;margin-bottom:20px;}
+        .cart-to-checkout {
+            width:100%;padding:14px;background:var(--primary);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:16px;cursor:pointer;
         }
 
-        /* 底部页脚【新增联系栏+底部小菜单】 */
+        /* 底部页脚 */
         footer {
-            width: 100%;
-            background: var(--soft-black);
-            color: #cac6be;
-            padding: 70px 4% 36px;
-            margin-top: 100px;
+            width:100%;background:var(--soft-black);color:#cac6be;
+            padding:70px 4% 36px;margin-top:120px;
         }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 48px;
-            margin-bottom: 48px;
-        }
-        .footer-col h4 {
-            color: var(--gold-main);
-            font-size: 20px;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-        .footer-col ul {
-            list-style: none;
-        }
-        .footer-col li {
-            margin-bottom: 12px;
-            font-size: 14.2px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-        .footer-col li:hover {
-            color: var(--gold-main);
-            padding-left: 6px;
-        }
-        /* 底部联系信息区块 */
+        .footer-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:48px;margin-bottom:50px;}
+        .footer-col h4 {color:var(--primary);font-size:20px;margin-bottom:24px;font-weight:500;}
+        .footer-col li {margin-bottom:12px;font-size:14px;cursor:pointer;transition:var(--fast);}
+        .footer-col li:hover {color:var(--primary);padding-left:6px;}
         .footer-contact-bar {
-            width: 100%;
-            padding: 30px 0;
-            border-top: 1px solid #22201c;
-            border-bottom: 1px solid #22201c;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap:20px;
+            width:100%;padding:30px 0;border-top:1px solid #222;border-bottom:1px solid #222;
+            margin-bottom:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
         }
-        .contact-text {
-            font-size:16px;
-        }
-        .contact-text strong {
-            color:#6366f1;
-            font-size:18px;
-            margin-left:10px;
-        }
-        .footer-mini-menu {
-            display:flex;
-            gap:30px;
-        }
-        .footer-mini-menu a {
-            color:#cac6be;
-            text-decoration:none;
-            font-size:14px;
-        }
-        .footer-mini-menu a:hover {
-            color:var(--gold-main);
-        }
-        .copyright {
-            text-align: center;
-            padding-top: 36px;
-            font-size: 13.2px;
-            color: #999;
-            letter-spacing: 0.5px;
-        }
+        .contact-text {font-size:16px;}
+        .contact-text strong {color:var(--primary);font-size:18px;margin-left:10px;}
+        .footer-mini-menu {display:flex;gap:30px;flex-wrap:wrap;}
+        .footer-mini-menu a {color:#cac6be;font-size:14px;transition:var(--fast);}
+        .footer-mini-menu a:hover {color:var(--primary);}
+        .copyright {text-align:center;padding-top:36px;font-size:13px;color:#999;letter-spacing:0.5px;}
 
-        /* 移动端适配【手机和电脑视觉统一，不破坏双栏布局】 */
-        @media(max-width: 1200px) {
-            .main-container {
-                grid-template-columns: 220px 1fr;
-            }
-            .banner-wrap {
-                padding: 0 50px;
-                height: 380px;
-            }
-            .banner-text h1 {
-                font-size: 42px;
-            }
+        /* 移动端响应式全覆盖 */
+        @media(max-width:1200px) {
+            .main-wrap {grid-template-columns:220px 1fr;}
+            .detail-wrap {grid-template-columns:460px 1fr;}
+            .checkout-wrap {grid-template-columns:1fr 340px;}
+            .banner {height:380px;padding:0 50px;}
+            .banner-text h1 {font-size:42px;}
         }
-        @media(max-width: 992px) {
-            /* 保持双栏，仅缩小侧边栏宽度，不改成单列，保证和电脑布局一致 */
-            .main-container {
-                grid-template-columns: 180px 1fr;
-                gap:20px;
-            }
-            .footer-grid {
-                grid-template-columns: repeat(2,1fr);
-            }
-            .banner-wrap {
-                padding: 0 40px;
-                height: 340px;
-            }
-            .banner-text h1 {
-                font-size: 36px;
-            }
+        @media(max-width:992px) {
+            .nav-links {display:none;}
+            .mobile-menu-btn {display:block;}
+            .main-wrap {grid-template-columns:180px 1fr;}
+            .footer-grid {grid-template-columns:repeat(2,1fr);}
+            .detail-wrap {grid-template-columns:1fr;}
+            .checkout-wrap {grid-template-columns:1fr;}
+            .checkout-right {order:-1;margin-bottom:30px;position:static;}
+            .banner {height:340px;padding:0 40px;}
+            .banner-text h1 {font-size:36px;}
         }
-        @media(max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .search-bar {
-                flex: 1;
-                margin: 0 14px;
-            }
-            /* 关键：手机依旧双栏，电脑同款布局，不会变成单栏 */
-            .main-container {
-                grid-template-columns: 160px 1fr;
-                width:96%;
-            }
-            .product-grid {
-                grid-template-columns: repeat(2,1fr);
-                gap: 20px;
-            }
-            .cart-drawer {
-                width: 100%;
-                right: -100%;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 36px;
-            }
-            .banner-wrap {
-                padding: 0 24px;
-                height: 280px;
-                width:96%;
-            }
-            .banner-text h1 {
-                font-size: 28px;
-            }
-            .banner-text p {
-                font-size: 15px;
-            }
-            .footer-contact-bar {
-                flex-direction:column;
-                text-align:center;
-            }
-            .footer-mini-menu {
-                flex-wrap:wrap;
-                justify-content:center;
-            }
+        @media(max-width:768px) {
+            .search-bar {flex:1;margin:0 10px;}
+            .main-wrap {grid-template-columns:1fr;width:96%;}
+            .side-category {display:none;}
+            .product-grid {grid-template-columns:repeat(2,1fr);gap:20px;}
+            .cart-drawer {width:100%;right:-100%;}
+            .footer-grid {grid-template-columns:1fr;gap:36px;}
+            .banner {width:96%;height:280px;padding:0 20px;}
+            .banner-text h1 {font-size:28px;}
+            .banner-text p {font-size:15px;}
+            .footer-contact-bar {flex-direction:column;text-align:center;}
+            .footer-mini-menu {justify-content:center;}
+            .service-modal {width:calc(100% - 40px);height:70vh;right:20px;bottom:90px;}
+            .detail-tab-box {width:96%;}
+            .detail-wrap {width:96%;}
+            .checkout-wrap {width:96%;}
+            .detail-btn-group {flex-direction:column;}
+            .thumb-item {width:70px;height:70px;}
+            .main-detail-img {height:340px;}
         }
     </style>
 </head>
 <body>
-    <!-- 顶部导航 -->
+    <!-- 顶部导航全局共用 -->
     <header class="top-nav">
-        <div class="logo">驰创数谷 CHCSG</div>
+        <div class="logo" data-page="home">驰创数谷 CHCSG</div>
         <div class="search-bar">
-            <input type="text" placeholder="搜索游戏手柄、显卡、主机、电竞外设、机械键盘...">
+            <input type="text" placeholder="搜索主机、显卡、机械键盘、电竞外设...">
             <button>搜索</button>
         </div>
-        <div class="nav-links">
-            <a href="#">首页</a>
-            <a href="#">全部数码电竞</a>
-            <a href="#">新品首发</a>
-            <a href="#">限时折扣</a>
-            <a href="#">品牌专区</a>
-        </div>
-        <div class="cart-btn" id="openCart">
-            <span>购物车</span>
-            <span class="cart-count" id="cartNum">0</span>
+        <div class="nav-group">
+            <div class="nav-links">
+                <a href="#" data-page="home">首页</a>
+                <a href="#">全部电竞数码</a>
+                <a href="#">新品首发</a>
+                <a href="#">限时折扣</a>
+                <a href="#">品牌专区</a>
+            </div>
+            <div class="cart-header-btn" id="openCart">
+                <span>购物车</span>
+                <span class="cart-badge" id="cartNum">0</span>
+            </div>
+            <div class="mobile-menu-btn">☰</div>
         </div>
     </header>
-    <!-- 二级分类导航 -->
-    <div class="category-nav">
+    <!-- 二级分类导航 全局共用 -->
+    <div class="category-sub-nav">
         <span>全部分类</span>
-        <span>游戏主机掌机</span>
-        <span>电脑硬件显卡CPU</span>
-        <span>机械键盘鼠标外设</span>
+        <span>PS5/Xbox/Switch主机</span>
+        <span>显卡CPU电脑整机</span>
+        <span>机械键盘游戏鼠标</span>
         <span>电竞耳机音响</span>
-        <span>电竞桌椅设备</span>
-        <span>限量典藏款</span>
+        <span>电竞桌椅桌搭</span>
+        <span>限量典藏套装</span>
     </div>
-    <!-- 轮播活动大屏 -->
-    <section class="banner-wrap">
-        <div class="banner-text">
-            <h1>一站式电竞数码商城</h1>
-            <p>主机、显卡、外设全品类现货直发，正品国行保障，全国顺丰速发，365天售后质保，专业电竞装备一站式选购</p>
-            <a href="#goods" class="banner-btn">立即选购</a>
-        </div>
-    </section>
-    <!-- 主内容区 -->
-    <div class="main-container">
-        <!-- 左侧分类侧边栏 -->
-        <aside class="sidebar-category">
-            <h3>商品分类</h3>
-            <ul>
-                <li>🎮 全部热销商品</li>
-                <li>🎯 PS5/Xbox/Switch主机</li>
-                <li>💻 显卡CPU主板电脑整机</li>
-                <li>⌨️ 机械键盘游戏鼠标</li>
-                <li>🎧 电竞降噪耳机音响</li>
-                <li>🪑 电竞椅电脑桌支架</li>
-                <li>🎁 数码送礼礼盒套装</li>
-                <li>🔥 限时折扣专区</li>
-            </ul>
-            <h3 style="margin-top:34px;">筛选条件</h3>
-            <ul>
-                <li>价格从低到高</li>
-                <li>价格从高到低</li>
-                <li>销量优先</li>
-                <li>好评优先</li>
-            </ul>
-        </aside>
-        <!-- 右侧商品区域 -->
-        <main>
-            <!-- 横向热销滚动栏 -->
-            <div class="hot-scroll">
-                <h2 class="section-title">🔥 本周热销榜单</h2>
-                <div class="scroll-row" id="hotScrollWrap"></div>
+
+    <!-- ========== 页面容器 1：首页 ========== -->
+    <div class="page-container active" id="page-home">
+        <section class="banner">
+            <div class="banner-bg"></div>
+            <div class="banner-text">
+                <h1>一站式电竞数码商城</h1>
+                <p>主机、显卡、外设全品类现货国行正品，顺丰极速发货，365天官方质保，电竞装备一站式选购平台</p>
+                <a href="#goods" class="banner-btn">立即选购商品</a>
             </div>
-            <!-- 全部商品网格 -->
-            <h2 class="section-title" id="goods">全部电竞数码（18款甄选）</h2>
-            <div class="product-grid" id="productWrap"></div>
-        </main>
+        </section>
+        <div class="main-wrap">
+            <aside class="side-category">
+                <h3>商品分类</h3>
+                <ul id="sidebarCateList"></ul>
+                <h3 style="margin-top:34px;">筛选排序</h3>
+                <ul>
+                    <li>价格从低到高</li>
+                    <li>价格从高到低</li>
+                    <li>销量优先</li>
+                    <li>高分好评优先</li>
+                </ul>
+            </aside>
+            <main>
+                <div class="hot-scroll">
+                    <h2 class="section-title">🔥 本周热销榜单</h2>
+                    <div class="hot-row" id="hotScrollWrap"></div>
+                </div>
+                <h2 class="section-title" id="goods">全部电竞数码精选</h2>
+                <div class="product-grid" id="productWrap"></div>
+            </main>
+        </div>
+        <footer id="global-footer"></footer>
     </div>
-    <!-- 底部页脚 -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>购物指南</h4>
-                <ul>
-                    <li>下单流程说明</li>
-                    <li>支付方式介绍</li>
-                    <li>全国物流配送</li>
-                    <li>售后质保退换</li>
-                </ul>
+
+    <!-- ========== 页面容器 2：商品详情页 ========== -->
+    <div class="page-container" id="page-detail">
+        <div class="detail-wrap">
+            <div class="detail-gallery">
+                <div class="main-detail-img" id="mainDetailImg"></div>
+                <div class="thumb-list" id="thumbList"></div>
             </div>
-            <div class="footer-col">
-                <h4>客户服务</h4>
-                <ul>
-                    <li>国行正品保障</li>
-                    <li>硬件故障维修</li>
-                    <li>正规发票开具</li>
-                    <li>在线客服咨询</li>
-                </ul>
+            <div class="detail-info" id="detailInfoBox"></div>
+        </div>
+        <div class="detail-tab-box">
+            <div class="tab-header">
+                <div class="tab-item active" data-tab="desc">商品介绍</div>
+                <div class="tab-item" data-tab="param">规格参数</div>
+                <div class="tab-item" data-tab="review">买家评价</div>
             </div>
-            <div class="footer-col">
-                <h4>品牌合作</h4>
-                <ul>
-                    <li>数码品牌入驻</li>
-                    <li>企业批量采购</li>
-                    <li>电竞礼品定制</li>
-                    <li>线下门店渠道</li>
-                </ul>
+            <div class="tab-content active" id="tab-desc"></div>
+            <div class="tab-content" id="tab-param"></div>
+            <div class="tab-content" id="tab-review"></div>
+        </div>
+        <footer id="footer-detail"></footer>
+    </div>
+
+    <!-- ========== 页面容器 3：结算支付页面 ========== -->
+    <div class="page-container" id="page-checkout">
+        <div class="checkout-wrap">
+            <div class="checkout-left">
+                <div class="checkout-step">
+                    <div class="step-item active" data-step="addr">1.收货地址</div>
+                    <div class="step-item" data-step="pay">2.支付方式</div>
+                    <div class="step-item" data-step="confirm">3.确认下单</div>
+                </div>
+                <div class="addr-block">
+                    <div class="addr-title">
+                        <span>收货地址</span>
+                        <span class="new-addr-btn" id="newAddrBtn">+ 新增地址</span>
+                    </div>
+                    <div id="addrListBox"></div>
+                    <div id="newAddrForm" style="display:none;margin-top:20px;padding:20px;border:1px solid var(--border);border-radius:var(--radius-sm);">
+                        <div class="form-row">
+                            <label>收货人姓名</label>
+                            <input type="text" id="addrName" placeholder="请输入姓名">
+                        </div>
+                        <div class="form-row">
+                            <label>联系电话</label>
+                            <input type="text" id="addrPhone" placeholder="手机号码">
+                        </div>
+                        <div class="form-row">
+                            <label>收货地区</label>
+                            <select id="addrArea">
+                                <option value="">选择省市</option>
+                                <option value="广东省深圳市">广东省深圳市</option>
+                                <option value="上海市">上海市</option>
+                                <option value="北京市">北京市</option>
+                                <option value="浙江省杭州市">浙江省杭州市</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label>详细地址</label>
+                            <input type="text" id="addrDetail" placeholder="街道、小区、门牌号">
+                        </div>
+                        <button style="padding:10px 24px;background:var(--primary);color:#fff;border-radius:var(--radius-sm);margin-top:10px;" id="saveAddr">保存地址</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>配送方式</label>
+                    <select>
+                        <option>顺丰速运 次日达（免运费）</option>
+                        <option>普通快递 3-5天（免运费）</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>支付方式</label>
+                    <div class="pay-method-group">
+                        <div class="pay-item active" data-pay="wechat">微信支付</div>
+                        <div class="pay-item" data-pay="alipay">支付宝</div>
+                        <div class="pay-item" data-pay="card">银行卡</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>优惠券</label>
+                    <input type="text" placeholder="输入优惠码抵扣金额">
+                </div>
             </div>
-            <div class="footer-col">
-                <h4>关于驰创数谷</h4>
-                <ul>
-                    <li>平台品牌介绍</li>
-                    <li>数码供应链渠道</li>
-                    <li>媒体品牌报道</li>
-                    <li>隐私使用政策</li>
-                </ul>
+            <div class="checkout-right">
+                <div class="order-summary">
+                    <h3 style="margin-bottom:20px;">订单商品</h3>
+                    <div id="checkoutGoodsList"></div>
+                    <div class="calc-row">
+                        <span>商品总价</span>
+                        <span id="subTotal">¥0.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>运费</span>
+                        <span>¥0.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>优惠券减免</span>
+                        <span>-¥0.00</span>
+                    </div>
+                    <div class="calc-total">
+                        <span>应付总额</span>
+                        <span id="payTotal">¥0.00</span>
+                    </div>
+                    <button class="submit-pay" id="submitOrderBtn">提交订单并支付</button>
+                </div>
             </div>
         </div>
-        <!-- 新增：联系方式栏 + 底部小菜单 -->
-        <div class="footer-contact-bar">
-            <div class="contact-text">
-                在线客服Telegram：<strong>+65 88521816</strong>
-            </div>
-            <div class="footer-mini-menu">
-                <a href="#">隐私政策</a>
-                <a href="#">服务条款</a>
-                <a href="#">退换货规则</a>
-                <a href="#">常见问题FAQ</a>
-                <a href="#">投诉反馈通道</a>
-            </div>
-        </div>
-        <div class="copyright">
-            © 2026 CHCSG驰创数谷电玩电竞数码商城 版权所有 | 域名 chcsg.top 官方运营平台
-        </div>
-    </footer>
-    <!-- 购物车侧边抽屉 -->
+        <footer id="footer-checkout"></footer>
+    </div>
+
+    <!-- 购物车侧边抽屉 + 遮罩 -->
     <div class="mask" id="mask"></div>
     <div class="cart-drawer" id="cartDrawer">
-        <div class="cart-header">
+        <div class="cart-draw-header">
             <h2>我的购物车</h2>
-            <span class="close-cart" id="closeCart">×</span>
+            <span style="font-size:26px;cursor:pointer;" id="closeCart">×</span>
         </div>
-        <div class="cart-list" id="cartList"></div>
-        <div class="cart-footer">
-            <div class="total-line">
-                <span>商品合计：</span>
-                <span id="totalPrice">¥0.00</span>
+        <div class="cart-draw-list" id="cartListBox"></div>
+        <div class="cart-draw-footer">
+            <div class="cart-total-line">
+                <span>合计金额</span>
+                <span id="cartTotalPrice">¥0.00</span>
             </div>
-            <button class="checkout-btn" id="goCheckout">去结算</button>
+            <button class="cart-to-checkout" id="cartGoCheckout">去结算</button>
         </div>
     </div>
-    <!-- 结算弹窗 -->
-    <div class="checkout-modal" id="checkoutModal">
-        <h2>订单确认结算</h2>
-        <div id="checkoutList"></div>
-        <div class="checkout-total">
-            <span>应付总金额：</span>
-            <span id="checkoutTotal">¥0.00</span>
+
+    <!-- AI在线客服悬浮弹窗 -->
+    <div class="service-float-btn" id="openService">💬</div>
+    <div class="service-modal" id="serviceModal">
+        <div class="service-header">
+            <span>AI智能客服</span>
+            <span class="service-close" id="closeService">×</span>
         </div>
-        <button class="submit-order">提交订单（模拟体验）</button>
+        <div class="service-quick" id="quickQaBox"></div>
+        <div class="chat-box" id="chatMsgBox">
+            <div class="chat-item chat-robot">您好，欢迎来到驰创数谷！我是AI智能客服，有任何问题可以直接提问，也可以点击下方快捷问题。</div>
+        </div>
+        <div class="service-input-bar">
+            <input class="service-input" id="serviceInput" placeholder="输入问题发送给客服">
+            <button class="send-msg" id="sendServiceMsg">发送</button>
+        </div>
     </div>
 
     <script>
-        // 18款电竞数码商品，高清电竞设备图片，无残缺
+        // ====================== 全局商品库（全部图文匹配电竞数码高清图） ======================
         const productList = [
-            {id:1,name:"PS5 光驱版游戏主机 国行全新原装",price:3280,oldPrice:3899,star:4.8,tag:"限时7折",img:"https://picsum.photos/id/96/600/600"},
-            {id:2,name:"RTX4070Ti Super 16G电竞独立显卡",price:6890,oldPrice:7999,star:4.9,tag:"热销爆款",img:"https://picsum.photos/id/60/600/600"},
-            {id:3,name:"樱桃机械键盘RGB背光游戏有线款",price:459,oldPrice:699,star:4.7,tag:"新品首发",img:"https://picsum.photos/id/21/600/600"},
-            {id:4,name:"7.1声道电竞降噪头戴游戏耳机",price:869,oldPrice:1199,star:4.6,tag:"外设好物",img:"https://picsum.photos/id/3/600/600"},
-            {id:5,name:"人体工学可躺升降电竞电脑椅",price:2560,oldPrice:3299,star:4.5,tag:"季末折扣",img:"https://picsum.photos/id/1060/600/600"},
-            {id:6,name:"轻量化无线游戏鼠标 三模充电款",price:699,oldPrice:999,star:4.6,tag:"送礼首选",img:"https://picsum.photos/id/9/600/600"},
-            {id:7,name:"Switch OLED 白色主机全套配件",price:1980,oldPrice:2499,star:4.7,tag:"秋冬爆款",img:"https://picsum.photos/id/26/600/600"},
-            {id:8,name:"XBOX Series X 1TB 次世代主机",price:3690,oldPrice:4299,star:4.8,tag:"限量珍藏",img:"https://picsum.photos/id/119/600/600"},
-            {id:9,name:"i7 14700KF 高端游戏台式整机",price:4280,oldPrice:5499,star:4.9,tag:"店长推荐",img:"https://picsum.photos/id/23/600/600"},
-            {id:10,name:"多功能桌面手机手柄支架充电底座",price:129,oldPrice:199,star:4.5,tag:"限时特价",img:"https://picsum.photos/id/160/600/600"},
-            {id:11,name:"游戏手柄无线充电四充收纳套装",price:459,oldPrice:699,star:4.6,tag:"送礼礼盒",img:"https://picsum.photos/id/1048/600/600"},
-            {id:12,name:"27英寸2K 180Hz电竞显示器IPS屏",price:1529,oldPrice:2099,star:4.4,tag:"数码新品",img:"https://picsum.photos/id/129/600/600"},
-            {id:13,name:"电脑桌面RGB氛围灯带拾音灯",price:190,oldPrice:299,star:4.7,tag:"桌面热销",img:"https://picsum.photos/id/103/600/600"},
-            {id:14,name:"铝合金可升降电脑电竞书桌",price:2980,oldPrice:3699,star:4.8,tag:"桌搭爆款",img:"https://picsum.photos/id/1067/600/600"},
-            {id:15,name:"高端无线蓝牙桌面音响低音炮",price:1380,oldPrice:1799,star:4.9,tag:"桌面刚需",img:"https://picsum.photos/id/1068/600/600"},
-            {id:16,name:"游戏主机大容量移动固态2TB硬盘",price:760,oldPrice:1060,star:4.5,tag:"限量款",img:"https://picsum.photos/id/110/600/600"},
-            {id:17,name:"全套电脑清洁除尘工具套装",price:199,oldPrice:299,star:4.6,tag:"生活好物",img:"https://picsum.photos/id/133/600/600"},
-            {id:18,name:"机械手感有线办公游戏键鼠套装",price:159,oldPrice:239,star:4.4,tag:"新品特惠",img:"https://picsum.photos/id/164/600/600"},
-        ]
-        // 购物车全局数据
-        let cartData = [];
-        const productWrap = document.getElementById('productWrap');
-        const hotScrollWrap = document.getElementById('hotScrollWrap');
-        const cartList = document.getElementById('cartList');
-        const cartNum = document.getElementById('cartNum');
-        const totalPriceDom = document.getElementById('totalPrice');
-        const checkoutList = document.getElementById('checkoutList');
-        const checkoutTotal = document.getElementById('checkoutTotal');
-        const cartDrawer = document.getElementById('cartDrawer');
-        const mask = document.getElementById('mask');
-        const openCart = document.getElementById('openCart');
-        const closeCart = document.getElementById('closeCart');
-        const goCheckout = document.getElementById('goCheckout');
-        const checkoutModal = document.getElementById('checkoutModal');
-
-        // 图片加载监听，彻底解决图片残缺、空白、加载失败
-        function watchImageLoad() {
-            const allImgs = document.querySelectorAll('img');
-            allImgs.forEach(img => {
-                if(img.complete) img.classList.add('loaded');
-                img.onload = () => img.classList.add('loaded');
-                // 加载失败强制替换高清电竞兜底图，不会留白残缺
-                img.onerror = ()=>{
-                    img.src = "https://picsum.photos/id/96/600/600";
-                    img.classList.add('loaded');
-                }
-            })
-        }
-
-        // 渲染全部商品网格
-        function renderAllProducts(){
-            productWrap.innerHTML = '';
-            productList.forEach(item=>{
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="card-top">
-                        <span class="product-tag">${item.tag}</span>
-                        <img class="product-img" src="${item.img}" alt="${item.name}" loading="lazy">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">${item.name}</h3>
-                        <div class="star-rating">★★★★★ ${item.star} 高分评价</div>
-                        <div class="price-wrap">
-                            <span class="old-price">¥${item.oldPrice}</span>
-                            <span class="new-price">¥${item.price}</span>
-                        </div>
-                        <button class="add-cart-btn" data-id="${item.id}">加入购物车</button>
-                    </div>
-                `;
-                productWrap.appendChild(card);
-            })
-            bindAddCartBtn();
-            watchImageLoad();
-        }
-
-        // 渲染横向热销栏（前6款爆款）
-        function renderHotScroll(){
-            hotScrollWrap.innerHTML = '';
-            const hotList = productList.slice(0,6);
-            hotList.forEach(item=>{
-                const card = document.createElement('div');
-                card.style.minWidth = '252px';
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="card-top">
-                        <span class="product-tag">${item.tag}</span>
-                        <img class="product-img" src="${item.img}" alt="${item.name}" loading="lazy">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">${item.name}</h3>
-                        <div class="star-rating">★★★★★ ${item.star}</div>
-                        <div class="price-wrap">
-                            <span class="old-price">¥${item.oldPrice}</span>
-                            <span class="new-price">¥${item.price}</span>
-                        </div>
-                        <button class="add-cart-btn" data-id="${item.id}">加入购物车</button>
-                    </div>
-                `;
-                hotScrollWrap.appendChild(card);
-            })
-            bindAddCartBtn();
-            watchImageLoad();
-        }
-
-        // 绑定加入购物车按钮
-        function bindAddCartBtn(){
-            document.querySelectorAll('.add-cart-btn').forEach(btn=>{
-                btn.onclick = function(){
-                    const pid = Number(this.dataset.id);
-                    const targetGoods = productList.find(p=>p.id === pid);
-                    const existIndex = cartData.findIndex(item=>item.id === pid);
-                    if(existIndex > -1){
-                        cartData[existIndex].quantity +=1;
-                    }else{
-                        cartData.push({...targetGoods, quantity:1})
-                    }
-                    refreshCart();
-                }
-            })
-        }
-
-        // 刷新购物车
-        function refreshCart(){
-            cartList.innerHTML = '';
-            let total = 0;
-            cartData.forEach(item=>{
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                const cartItemDom = document.createElement('div');
-                cartItemDom.className = 'cart-item';
-                cartItemDom.innerHTML = `
-                    <img src="${item.img}" loading="lazy">
-                    <div class="item-info">
-                        <h4>${item.name}</h4>
-                        <div class="item-price">单价 ¥${item.price}</div>
-                        <div class="quantity-control">
-                            <button class="minus" data-id="${item.id}">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="plus" data-id="${item.id}">+</button>
-                        </div>
-                    </div>
-                `;
-                cartList.appendChild(cartItemDom);
-            })
-            // 更新购物车角标、总价
-            const totalNum = cartData.reduce((sum,item)=>sum+item.quantity,0);
-            cartNum.innerText = totalNum;
-            totalPriceDom.innerText = `¥${total.toFixed(2)}`;
-            // 增减数量绑定
-            document.querySelectorAll('.minus').forEach(btn=>{
-                btn.onclick = function(){
-                    const pid = Number(this.dataset.id);
-                    const idx = cartData.findIndex(i=>i.id === pid);
-                    if(cartData[idx].quantity <=1){
-                        cartData.splice(idx,1);
-                    }else{
-                        cartData[idx].quantity -=1;
-                    }
-                    refreshCart();
-                }
-            })
-            document.querySelectorAll('.plus').forEach(btn=>{
-                btn.onclick = function(){
-                    const pid = Number(this.dataset.id);
-                    const idx = cartData.findIndex(i=>i.id === pid);
-                    cartData[idx].quantity +=1;
-                    refreshCart();
-                }
-            })
-            watchImageLoad();
-        }
-
-        // 打开/关闭购物车抽屉
-        openCart.onclick = ()=>{
-            cartDrawer.classList.add('active');
-            mask.classList.add('active');
-        }
-        function closeCartDrawer(){
-            cartDrawer.classList.remove('active');
-            mask.classList.remove('active');
-        }
-        closeCart.onclick = closeCartDrawer;
-        mask.onclick = closeCartDrawer;
-
-        // 结算页面逻辑
-        goCheckout.onclick = ()=>{
-            if(cartData.length ===0){
-                alert("购物车暂无商品，请先添加数码电竞装备！");
-                return;
-            }
-            checkoutList.innerHTML = '';
-            let total = 0;
-            cartData.forEach(item=>{
-                const rowTotal = item.price * item.quantity;
-                total += rowTotal;
-                const row = document.createElement('div');
-                row.className = 'checkout-item-row';
-                row.innerHTML = `
-                    <span>${item.name} ×${item.quantity}</span>
-                    <span>¥${rowTotal}</span>
-                `;
-                checkoutList.appendChild(row);
-            })
-            checkoutTotal.innerText = `¥${total.toFixed(2)}`;
-            checkoutModal.classList.add('active');
-        }
-
-        // 页面初始化渲染
-        window.addEventListener('DOMContentLoaded', ()=>{
-            renderAllProducts();
-            renderHotScroll();
-        })
-    </script>
-</body>
-</html>
+            {
+                id:1,
+                name:"PS5 光驱版游戏主机 国行全新原装双手柄套装",
+                price:3280,
+                oldPrice:3899,
+                star:4.8,
+                tag:"限时7折",
+                stock:86,
+                spec:["单主机","双手柄套装","主机+3款热门游戏"],
+                mainImg:"https://picsum.photos/id/96/800/800",
+                detailImgs:[
+                    "https://picsum.photos/id/96/800/800",
+                    "https://picsum.photos/id/119/800/800",
+                    "https://picsum.photos/id/26/800/800",
+                    "https://picsum.photos/id/1048/800/800"
+                ],
+                desc:"国行正品PS5光驱版主机，全新未拆封，支持4K蓝光光盘游戏，高速SSD加载，DualSense自适应扳机震动手柄，3D立体音效。全国顺丰包邮，官方两年质保，全套原装配件，可免费拷入热门数字游戏，支持线下门店自提。",
+                descImg:"https://picsum.photos/id/129/1200/600",
+                param:[
+                    ["产品型号","CFI-2000"],
+                    ["处理器","AMD定制8核Zen2"],
+                    ["显卡","RDNA2定制GPU"],
+                    ["内存","16GB GDDR6"],
+                    ["硬盘","825GB高速SSD"],
+                    ["光驱","4K UHD蓝光光驱"],
+                    ["质保","国行2年官方保修"]
+                ],
+                reviews:[
+                    {user:"电竞玩家阿凯",star:5,text:"主机全新正品，运行安静，画面4K丝滑，客服服务到位，发货速度超快！"},
+                    {user:"数码发烧友",star:4.5,text:"套装性价比很高，手柄手感舒服，赠送的游戏很好玩，推荐购买。"}
+                ]
+            },
+            {
+                id:2,
+                name:"RTX4070Ti Super 16G 七彩虹火神电竞独立显卡",
+                price:6890,
+                oldPrice:7999,
+                star:4.9,
+                tag:"热销爆款",
+                stock:32,
+                spec:["火神OC水冷版","火神OC风冷版","AD白色限定款"],
+                mainImg:"https://picsum.photos/id/60/800/800",
+                detailImgs:[
+                    "https://picsum.photos/id/60/800/800",
+                    "https://picsum.photos/id/23/800/800",
+                    "https://picsum.photos/id/110/800/800"
+                ],
+                desc:"RTX4070Ti Super 16G高端电竞显卡，DLSS3超分辨率技术，2K/4K游戏满帧运行，三风扇散热，RGB神光同步，支持直播渲染、3D建模、4K视频剪辑。全新国行正品，三年店铺质保，含全套配件，现货当天发出。",
+                descImg:"https://picsum.photos/id/103/1200/600",
+                param:[
+                    ["芯片","AD104核心"],
+                    ["显存","16GB GDDR6X 256bit"],
+                    ["供电","16相数字供电"],
+                    ["散热","三风扇镀镍散热鳍片"],
+                    ["接口","DP*3 + HDMI 2.1"],
+                    ["质保","3年全国联保"]
+                ],
+                reviews:[
+                    {user:"装机大佬",star:5,text:"2K拉满所有3A大作，温度控制优秀，RGB灯效颜值超高，非常满意。"}
+                ]
+            },
+            {
+                id:3,
+                name:"樱桃Cherry MX8.0 RGB背光机械键盘 红轴电竞款",
+                price:459,
+                oldPrice:699,
+                star:4.7,
+                tag:"新品首发",
+                stock:156,
+                spec:["红轴","青轴","茶轴","黑轴"],
+                mainImg:"https://picsum.photos/id/21/800/800",
+                detailImgs:["https://picsum.photos/id/21/800/800","https://picsum.photos/id/164/800/800"],
+                desc:"德国原厂樱桃MX轴体，全金属铝合金机身，1680万色RGB灯光，全键无冲，磁吸手托，办公游戏两用，防水防尘设计，Type-C有线连接，赠送定制键帽。",
+                descImg:"https://picsum.photos/id/133/1200/600",
+                param:[["轴体","Cherry MX原厂轴"],["材质","航空铝合金"],["灯光","RGB全彩背光"]],
+                reviews:[{user:"码字博主",star:4.8,text:"红轴手感轻柔，长时间打字不累，灯光效果很好看。"}]
+            },
+            {
+                id:4,
+                name:"7.1声道电竞降噪头戴游戏耳机 无线低延迟款",
+                price:869,
+                oldPrice:1199,
+                star:4.6,
+                tag:"外设好物",
+                stock:92,
+                spec:["有线标准版","无线三模旗舰款"],
+                mainImg:"https://picsum.photos/id/3/800/800",
+                detailImgs:["https://picsum.photos/id/3/800/800","https://picsum.photos/id/1068/800/800"],
+                desc:"虚拟7.1环绕立体声，主动降噪麦克风，低延迟2.4G无线连接，蛋白皮透气耳罩，续航30小时，支持PC/主机/手机全平台通用。",
+                descImg:"https://picsum.photos/id/1068/1200/600",
+                param:[["声道","虚拟7.1环绕"],["续航","30小时无线续航"]],
+                reviews:[{user:"FPS玩家",star:4.6,text:"听声辨位清晰，降噪麦克风清晰无杂音。"}]
+            },
+            {
+                id:5,
+                name:"人体工学可躺升降电竞电脑椅 铝合金脚款",
+                price:2560,
+                oldPrice:3299,
+                star:4.5,
+                tag:"季末折扣",
+                stock:45,
+                spec:["黑色皮质","白色限量款"],
+                mainImg:"https://picsum.photos/id/1060/800/800",
+                detailImgs:["https://picsum.photos/id/1060/800/800","https://picsum.photos/id/1067/800/800"],
+                desc:"160度大角度后仰躺平，4D可调节扶手，记忆棉腰托头枕，加厚防爆底盘，铝合金五星脚，承重150KG，久坐不累，家用直播电竞通用。",
+                descImg:"https://picsum.photos/id/1067/1200/600",
+                param:[["调节角度","90°-160°可躺"],["承重","150KG"],["底座","加厚铝合金五星脚"]],
+                reviews:[{user:"主播小夏",star:4.5,text:"每天直播8小时，腰部支撑很舒服，组装简单。"}]
+            },
+            {
+                id:6,
+                name:"轻量化无线游戏鼠标 三模充电8K回报率",
+                price:699,
+                oldPrice:999,
+                star:4.6,
+                tag:"送礼首选",
+                stock:123,
+                spec:["黑色","白色"],
+                mainImg:"https://picsum.photos/id/9/800/800",
+                detailImgs:["https://picsum.photos/id/9/800/800","https://picsum.photos/id/160/800/800"],
+                desc:"65g极致轻量化，PAW3950高端传感器，8000Hz回报率，有线/2.4G/蓝牙三模，Type-C快充，自定义按键宏编程。",
+                descImg:"https://picsum.photos/id/160/1200
