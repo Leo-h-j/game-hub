@@ -48,6 +48,7 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             background: #e5e7eb;
+            min-height: 80px;
         }
         img.loaded {opacity:1;}
         a {text-decoration: none;color: inherit;}
@@ -664,7 +665,7 @@
     </div>
 
     <script>
-        // ====================== 全局商品库（全部图文匹配电竞数码高清图） ======================
+        // ====================== 全局商品库（修复截断，完整图文匹配） ======================
         const productList = [
             {
                 id:1,
@@ -787,4 +788,294 @@
                 mainImg:"https://picsum.photos/id/9/800/800",
                 detailImgs:["https://picsum.photos/id/9/800/800","https://picsum.photos/id/160/800/800"],
                 desc:"65g极致轻量化，PAW3950高端传感器，8000Hz回报率，有线/2.4G/蓝牙三模，Type-C快充，自定义按键宏编程。",
-                descImg:"https://picsum.photos/id/160/1200
+                descImg:"https://picsum.photos/id/160/1200/600",
+                param:[["重量","65g轻量化"],["传感器","PAW3950"],["回报率","8000Hz"]],
+                reviews:[{user:"竞技玩家",star:4.7,text:"轻量化手感超棒，无线无延迟，宏编程设置很方便。"}]
+            }
+        ];
+
+        // 购物车本地存储
+        let cartList = JSON.parse(localStorage.getItem("cart")) || [];
+        // 当前选中商品ID
+        let currentProductId = null;
+        // AI客服问答库
+        const qaLib = {
+            "发货时间":"现货商品当天18点前下单当日发出，预售商品页面标注到货时间，顺丰速运。",
+            "质保售后":"全店国行正品，主机2年官方保修，显卡外设3年店铺质保，非人为损坏免费维修。",
+            "支付方式":"支持微信、支付宝、银行卡，页面提交订单后模拟支付流程，无真实扣款。",
+            "能否自提":"深圳线下门店支持自提，下单后联系客服预约到店时间。",
+            "发票":"下单备注公司抬头，收货后3个工作日开具电子发票。"
+        };
+        const quickQaKeys = Object.keys(qaLib);
+
+        // ====================== 页面初始化渲染核心函数（修复空白关键） ======================
+        function initPage() {
+            renderSideCate();
+            renderHotList();
+            renderAllProduct();
+            renderFooter();
+            renderQuickQa();
+            updateCartBadge();
+            bindAllEvent();
+        }
+
+        // 1. 渲染侧边分类栏
+        function renderSideCate() {
+            const cateWrap = document.getElementById("sidebarCateList");
+            const cateArr = ["游戏主机","显卡整机","机械键盘","电竞鼠标","游戏耳机","电竞桌椅","周边配件"];
+            let html = "";
+            cateArr.forEach(item=>{
+                html += `<li>${item}</li>`;
+            })
+            cateWrap.innerHTML = html;
+        }
+
+        // 2. 渲染热销横向列表
+        function renderHotList() {
+            const hotWrap = document.getElementById("hotScrollWrap");
+            let html = "";
+            // 取前3个作为热销
+            const hotArr = productList.slice(0,3);
+            hotArr.forEach(good=>{
+                html += createProductCardHtml(good);
+            })
+            hotWrap.innerHTML = html;
+        }
+
+        // 3. 渲染全部商品网格
+        function renderAllProduct() {
+            const goodsWrap = document.getElementById("productWrap");
+            let html = "";
+            productList.forEach(good=>{
+                html += createProductCardHtml(good);
+            })
+            goodsWrap.innerHTML = html;
+        }
+
+        // 生成商品卡片HTML（统一复用）
+        function createProductCardHtml(good) {
+            return `
+                <div class="product-card" data-id="${good.id}">
+                    <div class="card-img-box">
+                        <span class="card-tag">${good.tag}</span>
+                        <img src="${good.mainImg}" alt="${good.name}" onload="this.classList.add('loaded')">
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-name">${good.name}</h3>
+                        <div class="card-star">★★★★★ ${good.star}</div>
+                        <div class="price-line">
+                            <span class="old-price">¥${good.oldPrice}</span>
+                            <span class="new-price">¥${good.price}</span>
+                        </div>
+                        <button class="add-cart-card" data-add="${good.id}">加入购物车</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 4. 渲染底部页脚（三个页面共用底部）
+        function renderFooter() {
+            const footerHtml = `
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <h4>购物指南</h4>
+                        <li>下单流程</li>
+                        <li>支付说明</li>
+                        <li>配送方式</li>
+                        <li>发票开具</li>
+                    </div>
+                    <div class="footer-col">
+                        <h4>售后保障</h4>
+                        <li>质保政策</li>
+                        <li>退换货规则</li>
+                        <li>维修服务</li>
+                        <li>常见问题</li>
+                    </div>
+                    <div class="footer-col">
+                        <h4>关于我们</h4>
+                        <li>品牌介绍</li>
+                        <li>线下门店</li>
+                        <li>企业合作</li>
+                        <li>招聘信息</li>
+                    </div>
+                    <div class="footer-col">
+                        <h4>联系渠道</h4>
+                        <li>在线AI客服（右下角弹窗）</li>
+                        <li>售后热线：400-888-6699</li>
+                        <li>商务邮箱：service@chcsg.com</li>
+                        <li>TG通讯：@CHCSG_SERVICE</li>
+                    </div>
+                </div>
+                <div class="footer-contact-bar">
+                    <div class="contact-text">客服热线 <strong>400-888-6699</strong> ｜ TG客服 <strong>@CHCSG_SERVICE</strong> ｜ 工作日9:00-22:00在线</div>
+                    <div class="footer-mini-menu">
+                        <a href="#">隐私政策</a>
+                        <a href="#">用户协议</a>
+                        <a href="#">售后条款</a>
+                        <a href="#">网站地图</a>
+                    </div>
+                </div>
+                <div class="copyright">© 2026 驰创数谷 CHCSG 电竞数码商城 版权所有 | 国行正品电竞装备平台</div>
+            `;
+            document.getElementById("global-footer").innerHTML = footerHtml;
+            document.getElementById("footer-detail").innerHTML = footerHtml;
+            document.getElementById("footer-checkout").innerHTML = footerHtml;
+        }
+
+        // 5. 渲染AI客服快捷问答
+        function renderQuickQa() {
+            const qaBox = document.getElementById("quickQaBox");
+            let html = "";
+            quickQaKeys.forEach(key=>{
+                html += `<div class="quick-qa" data-q="${key}">${key}</div>`;
+            })
+            qaBox.innerHTML = html;
+        }
+
+        // 更新购物车角标数字
+        function updateCartBadge() {
+            const totalNum = cartList.reduce((sum,item)=>sum+item.num,0);
+            document.getElementById("cartNum").innerText = totalNum;
+            localStorage.setItem("cart", JSON.stringify(cartList));
+        }
+
+        // ====================== 页面跳转逻辑（首页/详情/结算） ======================
+        function switchPage(pageId) {
+            document.querySelectorAll(".page-container").forEach(page=>{
+                page.classList.remove("active");
+            })
+            document.getElementById(`page-${pageId}`).classList.add("active");
+            window.scrollTo(0,0);
+        }
+
+        // 打开商品详情页
+        function openDetail(goodId) {
+            currentProductId = goodId;
+            const good = productList.find(item=>item.id == goodId);
+            if(!good) return;
+            // 渲染主图+缩略图
+            const mainImgBox = document.getElementById("mainDetailImg");
+            const thumbBox = document.getElementById("thumbList");
+            mainImgBox.innerHTML = `<img src="${good.mainImg}" class="loaded">`;
+            let thumbHtml = "";
+            good.detailImgs.forEach((img,idx)=>{
+                thumbHtml += `
+                    <div class="thumb-item ${idx===0?'active':''}" data-img="${img}">
+                        <img src="${img}">
+                    </div>
+                `;
+            })
+            thumbBox.innerHTML = thumbHtml;
+            // 商品基础信息
+            const infoBox = document.getElementById("detailInfoBox");
+            let specHtml = "";
+            good.spec.forEach(s=>specHtml += `<div class="spec-item">${s}</div>`);
+            infoBox.innerHTML = `
+                <h1>${good.name}</h1>
+                <div class="detail-meta">
+                    <span>库存剩余：${good.stock}件</span>
+                    <span>销量1200+</span>
+                </div>
+                <div class="detail-star">★★★★★ ${good.star} 高分好评</div>
+                <div class="detail-price-block">
+                    <div class="price-big">¥${good.price}</div>
+                    <div class="price-old">原价 ¥${good.oldPrice}</div>
+                    <div class="stock-text">现货速发 国行全新正品</div>
+                </div>
+                <div class="spec-title">选择规格</div>
+                <div class="spec-group">${specHtml}</div>
+                <div class="num-select">
+                    <span>购买数量</span>
+                    <button class="num-btn minus">-</button>
+                    <input class="num-input" value="1">
+                    <button class="num-btn plus">+</button>
+                </div>
+                <div class="detail-btn-group">
+                    <button class="buy-now" data-id="${good.id}">立即购买</button>
+                    <button class="detail-addcart" data-id="${good.id}">加入购物车</button>
+                </div>
+            `;
+            // 商品介绍Tab
+            const descTab = document.getElementById("tab-desc");
+            descTab.innerHTML = `
+                <div class="desc-block">
+                    <h3>产品详细介绍</h3>
+                    <p class="desc-text">${good.desc}</p>
+                    <img class="desc-img" src="${good.descImg}">
+                </div>
+            `;
+            // 参数Tab
+            const paramTab = document.getElementById("tab-param");
+            let paramHtml = `<table class="param-table">`;
+            good.param.forEach(p=>{
+                paramHtml += `<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`;
+            })
+            paramHtml += `</table>`;
+            paramTab.innerHTML = paramHtml;
+            // 评价Tab
+            const reviewTab = document.getElementById("tab-review");
+            let reviewHtml = "";
+            good.reviews.forEach(r=>{
+                reviewHtml += `
+                    <div class="review-item">
+                        <div class="review-user">
+                            <span>${r.user}</span>
+                            <span class="review-star">★ ${r.star}</span>
+                        </div>
+                        <p>${r.text}</p>
+                    </div>
+                `;
+            })
+            reviewTab.innerHTML = reviewHtml;
+            // 切换到详情页
+            switchPage("detail");
+        }
+
+        // 渲染购物车列表
+        function renderCart() {
+            const cartBox = document.getElementById("cartListBox");
+            if(cartList.length === 0) {
+                cartBox.innerHTML = `<div style="text-align:center;padding:40px;color:#777;">购物车暂无商品，快去选购吧</div>`;
+                document.getElementById("cartTotalPrice").innerText = "¥0.00";
+                return;
+            }
+            let html = "";
+            let total = 0;
+            cartList.forEach(item=>{
+                const good = productList.find(g=>g.id === item.id);
+                const itemTotal = good.price * item.num;
+                total += itemTotal;
+                html += `
+                    <div class="cart-item-row">
+                        <div class="cart-item-img"><img src="${good.mainImg}"></div>
+                        <div>
+                            <div class="cart-item-name">${good.name}</div>
+                            <div class="cart-item-price">¥${good.price}</div>
+                            <div class="cart-num-ctrl">
+                                <button class="cart-minus" data-id="${item.id}">-</button>
+                                <span>${item.num}</span>
+                                <button class="cart-plus" data-id="${item.id}">+</button>
+                            </div>
+                            <div class="cart-del" data-id="${item.id}">删除商品</div>
+                        </div>
+                    </div>
+                `;
+            })
+            cartBox.innerHTML = html;
+            document.getElementById("cartTotalPrice").innerText = `¥${total.toFixed(2)}`;
+        }
+
+        // 渲染结算页订单列表
+        function renderCheckout() {
+            const checkBox = document.getElementById("checkoutGoodsList");
+            let total = 0;
+            let html = "";
+            cartList.forEach(item=>{
+                const good = productList.find(g=>g.id === item.id);
+                const itemTotal = good.price * item.num;
+                total += itemTotal;
+                html += `
+                    <div class="order-item">
+                        <div class="order-item-img"><img src="${good.mainImg}"></div>
+                        <div>
+                            <div
