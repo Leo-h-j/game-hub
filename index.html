@@ -1314,3 +1314,169 @@ function renderHotList(){
             <div class="product-info">
                 <a href="${item.detailUrl}" class="product-name">${item.name}</a>
                 <div class="star-rating">★★★★★ ${item.star}</div>
+                <div class="price-wrap">
+                    <span class="old-price">¥${item.oldPrice}</span>
+                    <span class="new-price">¥${item.price}</span>
+                </div>
+                <button class="add-cart-btn" data-id="${item.id}">加入购物车</button>
+            </div>
+        `;
+        hotScrollWrap.appendChild(card);
+    })
+}
+
+// 渲染全部商品网格
+function renderAllProduct(){
+    productWrap.innerHTML = '';
+    productList.forEach(item=>{
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="card-top img-skeleton">
+                <span class="product-tag">${item.tag}</span>
+                <a href="${item.detailUrl}">
+                    <img src="${item.img}" alt="${item.name}">
+                </a>
+            </div>
+            <div class="product-info">
+                <a href="${item.detailUrl}" class="product-name">${item.name}</a>
+                <div class="star-rating">★★★★★ ${item.star}</div>
+                <div class="price-wrap">
+                    <span class="old-price">¥${item.oldPrice}</span>
+                    <span class="new-price">¥${item.price}</span>
+                </div>
+                <button class="add-cart-btn" data-id="${item.id}">加入购物车</button>
+            </div>
+        `;
+        productWrap.appendChild(card);
+    })
+}
+
+// 更新购物车数量和总价
+function updateCartInfo(){
+    let total = 0;
+    cartList.innerHTML = '';
+    cartData.forEach(cartItem=>{
+        const product = productList.find(p=>p.id === cartItem.id);
+        total += product.price * cartItem.num;
+        const cartDom = document.createElement('div');
+        cartDom.className = 'cart-item';
+        cartDom.innerHTML = `
+            <img src="${product.img}" alt="${product.name}">
+            <div class="item-info">
+                <h4>${product.name}</h4>
+                <div class="item-price">¥${product.price}</div>
+                <div class="quantity-control">
+                    <button class="minus" data-id="${product.id}">-</button>
+                    <span>${cartItem.num}</span>
+                    <button class="plus" data-id="${product.id}">+</button>
+                </div>
+            </div>
+        `;
+        cartList.appendChild(cartDom);
+    })
+    cartNum.innerText = cartData.length;
+    totalPriceDom.innerText = `¥${total.toFixed(2)}`;
+    // 加减数量事件
+    document.querySelectorAll('.minus').forEach(btn=>{
+        btn.onclick = function(){
+            const pid = Number(this.dataset.id);
+            const target = cartData.find(i=>i.id === pid);
+            if(target.num <= 1){
+                cartData = cartData.filter(i=>i.id !== pid);
+            }else{
+                target.num -= 1;
+            }
+            updateCartInfo();
+        }
+    })
+    document.querySelectorAll('.plus').forEach(btn=>{
+        btn.onclick = function(){
+            const pid = Number(this.dataset.id);
+            const target = cartData.find(i=>i.id === pid);
+            target.num += 1;
+            updateCartInfo();
+        }
+    })
+}
+
+// 加入购物车
+function bindAddCart(){
+    document.querySelectorAll('.add-cart-btn').forEach(btn=>{
+        btn.onclick = function(e){
+            e.preventDefault();
+            const pid = Number(this.dataset.id);
+            const exist = cartData.find(i=>i.id === pid);
+            if(exist){
+                exist.num += 1;
+            }else{
+                cartData.push({id:pid, num:1});
+            }
+            updateCartInfo();
+            // 打开购物车
+            cartDrawer.classList.add('active');
+            mask.classList.add('active');
+        }
+    })
+}
+
+// 打开购物车
+openCart.onclick = ()=>{
+    cartDrawer.classList.add('active');
+    mask.classList.add('active');
+}
+// 关闭购物车
+closeCart.onclick = mask.onclick = ()=>{
+    cartDrawer.classList.remove('active');
+    mask.classList.remove('active');
+}
+
+// 结算按钮
+goCheckout.onclick = ()=>{
+    if(cartData.length === 0){
+        alert("购物车暂无商品！");
+        return;
+    }
+    checkoutList.innerHTML = '';
+    let total = 0;
+    cartData.forEach(cartItem=>{
+        const p = productList.find(x=>x.id === cartItem.id);
+        total += p.price * cartItem.num;
+        const row = document.createElement('div');
+        row.className = 'checkout-item-row';
+        row.innerHTML = `
+            <span>${p.name} × ${cartItem.num}</span>
+            <span>¥${p.price * cartItem.num}</span>
+        `;
+        checkoutList.appendChild(row);
+    })
+    checkoutTotal.innerText = `¥${total.toFixed(2)}`;
+    checkoutModal.classList.add('active');
+}
+// 点击结算弹窗外部关闭
+checkoutModal.onclick = function(e){
+    if(e.target === checkoutModal){
+        checkoutModal.classList.remove('active');
+    }
+}
+// 提交订单按钮
+document.querySelector('.submit-order').onclick = ()=>{
+    alert("订单提交成功！模拟下单完成");
+    cartData = [];
+    updateCartInfo();
+    checkoutModal.classList.remove('active');
+    cartDrawer.classList.remove('active');
+    mask.classList.remove('active');
+}
+
+// 页面加载完成执行渲染
+window.onload = function(){
+    renderHotList();
+    renderAllProduct();
+    watchImageLoad();
+    bindAddCart();
+    updateCartInfo();
+}
+</script>
+</body>
+</html>
